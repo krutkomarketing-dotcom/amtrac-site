@@ -868,6 +868,40 @@ body.pop-open{overflow:hidden}
   .slide.s-dark{grid-template-rows:176px 1fr!important}
   .slide.s-dark .tx{grid-row:2;align-self:stretch;height:auto!important;background:linear-gradient(0deg,rgba(23,25,28,.97) 75%,rgba(23,25,28,.55));padding-top:14px!important}
 }
+/* ---------- мобильный каталог в духе Онлайнера ---------- */
+.f-top,.f-foot,.msort{display:none}
+.fcnt{font-style:normal;display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--cta);color:var(--cta-fg);font-size:11px;font-weight:700;margin-left:6px}
+@media (max-width:900px){
+  .sortbar{position:sticky;top:calc(var(--hh,0px) + env(safe-area-inset-top,0px));z-index:20;background:var(--page);margin:0 -16px 12px;padding:8px 16px;box-shadow:0 1px 0 var(--line);overflow:visible!important;flex-wrap:nowrap}
+  .sortbar button.s{display:none}
+  .msort{display:block;position:relative;flex:1 1 auto;min-width:0}
+  .msort select{appearance:none;-webkit-appearance:none;width:100%;height:38px;border:1px solid var(--line-2);border-radius:var(--r-s);background:var(--card);color:var(--ink);font:500 14px var(--f);padding:0 30px 0 12px}
+  .msort::after{content:"";position:absolute;right:12px;top:50%;width:7px;height:7px;border-right:1.6px solid var(--muted);border-bottom:1.6px solid var(--muted);transform:translateY(-70%) rotate(45deg);pointer-events:none}
+  .sortbar .mob-f{height:38px;flex:none;order:2}
+  .sortbar .q{display:none!important}
+  .filters.open{display:block;position:fixed;inset:0;z-index:90;border-radius:0;overflow-y:auto;overscroll-behavior:contain;padding:0 16px calc(84px + env(safe-area-inset-bottom,0px));animation:fIn .22s ease-out}
+  @keyframes fIn{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
+  .filters.open .f-top{display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2;background:var(--card);margin:0 -16px 4px;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 12px;box-shadow:0 1px 0 var(--line)}
+  .f-top b{font-size:20px;font-weight:800}
+  .f-x{width:40px;height:40px;border-radius:50%;background:var(--sunk);font-size:24px;line-height:1;display:grid;place-items:center}
+  .filters.open .f-foot{display:block;position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--card);box-shadow:0 -1px 0 var(--line),0 -8px 24px rgba(0,0,0,.06)}
+  .f-foot .btn{width:100%;height:48px;font-size:16px}
+  .filters.open .chk{min-height:44px}
+  body.f-lock{overflow:hidden}
+  body.f-lock .tabbar,body.f-lock .fab,body.f-lock .cmpbar{display:none!important}
+}
+@media (max-width:560px){
+  .pgrid.rows{grid-template-columns:1fr;gap:8px}
+  .pgrid.rows .pc{display:grid;grid-template-columns:minmax(0,1fr) 104px;grid-template-areas:"tags img" "title img" "meta img" "price img" "buy buy";column-gap:12px;align-items:start;padding:12px}
+  .pgrid.rows .pc-img{grid-area:img;width:104px;height:104px;aspect-ratio:auto}
+  .pgrid.rows .pc-tags{grid-area:tags;position:static;flex-direction:row;flex-wrap:wrap;margin-bottom:6px}
+  .pgrid.rows .pc-title{grid-area:title;margin-top:0;min-height:0;font-size:14.5px;-webkit-line-clamp:3}
+  .pgrid.rows .pc-meta{grid-area:meta}
+  .pgrid.rows .pc-price{grid-area:price;margin-top:8px}
+  .pgrid.rows .pc-price b{font-size:19px}
+  .pgrid.rows .pc-buy{grid-area:buy;padding-top:10px}
+  .pgrid.rows .fav{top:14px;right:14px}
+}
 </style>
 
 <a class="skip" href="#app">Перейти к содержимому</a>
@@ -1149,6 +1183,12 @@ function plural(n,a,b,c){ n=Math.abs(n)%100; const n1=n%10; if(n>10&&n<20) retur
 
 // tech catalog
 let techF = 'all', techSort = 'pop', techStock = false, techMax = '', techMass = 'all', techEng = {};
+// мобильные фильтры на весь экран, как у Онлайнера
+let fOpen = false;
+const SORTS = [['pop','Сначала популярные'],['asc','Сначала дешевле'],['desc','Сначала дороже']];
+const fTop = () => `<div class="f-top"><b>Фильтры</b><button type="button" class="f-x" data-f-close aria-label="Закрыть фильтры">×</button></div>`;
+const fFoot = n => `<div class="f-foot"><button type="button" class="btn btn-act" data-f-close>Показать ${fmt(n)} ${plural(n,'товар','товара','товаров')}</button></div>`;
+const mBar = (cur, key, nAct) => `<label class="msort"><select data-msort="${key}" aria-label="Сортировка">${SORTS.map(([k,t])=>`<option value="${k}" ${cur===k?'selected':''}>${t}</option>`).join('')}</select></label><button type="button" class="btn btn-line btn-sm mob-f" data-tog-f>Фильтры${nAct?` <i class="fcnt">${nAct}</i>`:''}</button>`;
 const MASS = [['all','Любая'],['0-2','до 2 т'],['2-5','2–5 т'],['5-20','5–20 т'],['20-99','от 20 т']];
 const engs = m => (m.engine||'').split(',').map(x=>x.trim()).filter(Boolean);
 const ENGINES = [...new Set(DATA.machines.flatMap(engs))].sort();
@@ -1163,7 +1203,7 @@ function vTech(){
     <nav class="crumbs"><a href="#home">Главная</a><span>›</span><a href="#tech" data-tf="all">Техника</a>${techF!=='all'?`<span>›</span><span>${SUB[techF]}</span>`:''}</nav>
     <div class="page-h"><h1>${title}</h1><span>${list.length} ${plural(list.length,'товар','товара','товаров')}</span></div>
     <div class="cat-lay">
-      <aside class="filters" id="filters">
+      <aside class="filters ${fOpen?'open':''}" id="filters">${fTop()}
         <div class="fg"><h4>Тип техники</h4>
           <label class="chk"><input type="radio" name="tf" value="all" ${techF==='all'?'checked':''}> Вся техника <span>${DATA.machines.length}</span></label>
           ${['mini','big','roller','loader','other'].filter(k=>cnt[k]).map(k=>`<label class="chk"><input type="radio" name="tf" value="${k}" ${techF===k?'checked':''}> ${SUB[k]} <span>${cnt[k]}</span></label>`).join('')}
@@ -1172,10 +1212,10 @@ function vTech(){
         <div class="fg"><h4>Масса</h4><div class="pick-row">${MASS.map(([k,t])=>`<button type="button" class="chipb ${techMass===k?'on':''}" data-tm="${k}">${t}</button>`).join('')}</div></div>
         <div class="fg"><h4>Двигатель</h4>${ENGINES.map(e=>`<label class="chk"><input type="checkbox" data-te="${esc(e)}" ${techEng[e]?'checked':''}> ${esc(e)} <span>${DATA.machines.filter(m=>engs(m).includes(e)).length}</span></label>`).join('')}</div>
         <div class="fg"><h4>Наличие</h4><label class="chk"><input type="checkbox" id="tstock" ${techStock?'checked':''}> Только на складе <span>${DATA.machines.filter(m=>m.st==='ok').length}</span></label></div>
-        <button class="f-reset" data-treset>Сбросить фильтры</button>
+        <button class="f-reset" data-treset>Сбросить фильтры</button>${fFoot(list.length)}
       </aside>
       <div style="min-width:0">
-        <div class="sortbar"><button class="btn btn-line btn-sm mob-f" data-tog-f>Фильтры</button>${[['pop','Популярные'],['asc','Дешевле'],['desc','Дороже']].map(([k,t])=>`<button class="s ${techSort===k?'on':''}" data-ts="${k}">${t}</button>`).join('')}</div>
+        <div class="sortbar">${mBar(techSort,'t',[techF!=='all',techStock,techMax,techMass!=='all'].filter(Boolean).length+Object.keys(techEng).length)}${[['pop','Популярные'],['asc','Дешевле'],['desc','Дороже']].map(([k,t])=>`<button class="s ${techSort===k?'on':''}" data-ts="${k}">${t}</button>`).join('')}</div>
         ${list.length ? `<div class="pgrid">${list.map(card).join('')}</div>` : `<div class="empty"><b>Под фильтры ничего не подошло</b><span>Уберите ограничение по цене или наличию.</span><button class="btn btn-line" data-treset>Сбросить фильтры</button></div>`}
       </div>
     </div></div>`;
@@ -1233,7 +1273,7 @@ function vParts(){
     <nav class="crumbs"><a href="#home">Главная</a><span>›</span><a href="#parts" data-pb="all">Запчасти</a>${pBrand!=='all'?`<span>›</span><span>${BRAND[pBrand]}</span>`:''}</nav>
     <div class="page-h"><h1>${title}</h1><span>${fmt(list.length)} ${plural(list.length,'товар','товара','товаров')}</span></div>
     <div class="cat-lay">
-      <aside class="filters" id="filters">
+      <aside class="filters ${fOpen?'open':''}" id="filters">${fTop()}
         <div class="fg"><h4>Бренд техники</h4>
           <label class="chk"><input type="radio" name="pb" value="all" ${pBrand==='all'?'checked':''}> Все <span>${base.length}</span></label>
           ${['volvo-abg','vogele','moba'].map(c=>`<label class="chk"><input type="radio" name="pb" value="${c}" ${pBrand===c?'checked':''}> ${BRAND[c]} <span>${cnt(c)}</span></label>`).join('')}
@@ -1242,14 +1282,14 @@ function vParts(){
           ${[['all','Любое'],['ok','В наличии'],['wait','2–4 недели'],['order','Под заказ']].map(([k,t])=>`<label class="chk"><input type="radio" name="ps" value="${k}" ${pStock===k?'checked':''}> ${t} <span>${k==='all'?base.length:base.filter(p=>p.st===k).length}</span></label>`).join('')}
         </div>
         <div class="fg"><h4>Карточка</h4><label class="chk"><input type="checkbox" id="pphoto" ${pPhoto?'checked':''}> Только с фото <span>${base.filter(p=>p.img).length}</span></label></div>
-        <button class="f-reset" data-preset>Сбросить фильтры</button>
+        <button class="f-reset" data-preset>Сбросить фильтры</button>${fFoot(list.length)}
       </aside>
       <div style="min-width:0">
         ${pickPanel()}
-        <div class="sortbar"><button class="btn btn-line btn-sm mob-f" data-tog-f>Фильтры</button>${[['pop','Популярные'],['asc','Дешевле'],['desc','Дороже']].map(([k,t])=>`<button class="s ${pSort===k?'on':''}" data-psort="${k}">${t}</button>`).join('')}<span class="grow"></span>
+        <div class="sortbar">${mBar(pSort,'p',[pBrand!=='all',pStock!=='all',pPhoto].filter(Boolean).length)}${[['pop','Популярные'],['asc','Дешевле'],['desc','Дороже']].map(([k,t])=>`<button class="s ${pSort===k?'on':''}" data-psort="${k}">${t}</button>`).join('')}<span class="grow"></span>
           <label class="q"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--muted)"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg><input id="pq" type="search" value="${esc(pQ)}" placeholder="Название или номер" aria-label="Поиск в разделе"></label></div>
         ${chips.length?`<div class="chips">${chips.map(([k,t])=>`<button data-chip="${k}" aria-label="Убрать фильтр">${t} <span aria-hidden="true">×</span></button>`).join('')}</div>`:''}
-        ${list.length ? `<div class="pgrid">${list.slice(0,pShow).map(card).join('')}</div>${list.length>pShow?`<div class="more"><button class="btn btn-line" data-more>Показать ещё ${Math.min(40,list.length-pShow)} из ${fmt(list.length-pShow)}</button></div>`:''}`
+        ${list.length ? `<div class="pgrid rows">${list.slice(0,pShow).map(card).join('')}</div>${list.length>pShow?`<div class="more"><button class="btn btn-line" data-more>Показать ещё ${Math.min(40,list.length-pShow)} из ${fmt(list.length-pShow)}</button></div>`:''}`
           : `<div class="empty"><b>По запросу ничего нет</b><span>Отправьте номер детали менеджеру, подберём оригинал или аналог.</span><button type="button" class="btn btn-act" data-pop="ask">Написать менеджеру</button></div>`}
       </div>
     </div></div>`;
@@ -1668,7 +1708,7 @@ document.addEventListener('keydown', e => { if (e.key==='Escape') fabOpen(false)
 // ---------- router ----------
 const route = () => (location.hash || '#home').slice(1) || 'home';
 function render(keep){
-  const r = route(), y = scrollY;
+  const r = route(), y = scrollY, fsY = ($('#filters')||{}).scrollTop||0;
   clearInterval(slideTimer);
   const V = {tech:vTech, parts:vParts, abz:vAbz, conditions:vConditions, about:vAbout, contacts:vContacts, cart:vCart, favorites:vFav, compare:vCompare, account:vAccount, bulk:vBulk, service:vService, kp:vKP};
   app.innerHTML = V[r] ? V[r]() : byId[r] ? vProduct(byId[r]) : vHome();
@@ -1683,10 +1723,14 @@ function render(keep){
   document.body.classList.toggle('has-cmp', !!(cn && r!=='compare'));
   if (cn && r!=='compare') { cb.innerHTML = `<span>В сравнении: <b>${cn}</b></span><a class="btn btn-act" href="#compare">Сравнить</a><button class="x" data-cmp-clear aria-label="Очистить сравнение">×</button>`; cb.hidden = false; } else cb.hidden = true;
   if (keep) scrollTo(0, y);
+  const fl = $('#filters'); if (fl && fOpen) fl.scrollTop = fsY;
+  document.body.classList.toggle('f-lock', !!(fl && fOpen));
+  document.documentElement.style.setProperty('--hh', ($('.hdr')||{}).offsetHeight+'px');
   bind(); counters();
   if (r==='home') bindSlider();
 }
-addEventListener('hashchange', () => { megaOpen(false); tab = isM(byId[route()]) ? 'spec' : 'desc'; render(); scrollTo(0,0); });
+addEventListener('resize', () => document.documentElement.style.setProperty('--hh', ($('.hdr')||{}).offsetHeight+'px'));
+addEventListener('hashchange', () => { fOpen = false; megaOpen(false); tab = isM(byId[route()]) ? 'spec' : 'desc'; render(); scrollTo(0,0); });
 
 // links that also set a filter
 document.addEventListener('click', e => {
@@ -1725,7 +1769,9 @@ function bind(){
   $$('[data-chip]').forEach(b => b.onclick = () => { const k=b.dataset.chip; if(k==='pm') pModel='all'; if(k==='pn') pNode='all'; if(k==='q') pQ=''; if(k==='st') pStock='all'; if(k==='ph') pPhoto=false; render(true); });
   const pq = $('#pq'); if (pq) pq.oninput = () => { pQ = pq.value; pShow = 40; clearTimeout(pq._t); pq._t = setTimeout(() => { render(true); const n=$('#pq'); n.focus(); n.setSelectionRange(n.value.length, n.value.length); }, 220); };
   const mo = $('[data-more]'); if (mo) mo.onclick = () => { pShow += 40; render(true); };
-  $$('[data-tog-f]').forEach(b => b.onclick = () => $('#filters').classList.toggle('open'));
+  $$('[data-tog-f]').forEach(b => b.onclick = () => { fOpen = true; $('#filters').classList.add('open'); $('#filters').scrollTop = 0; document.body.classList.add('f-lock'); });
+  $$('[data-f-close]').forEach(b => b.onclick = () => { fOpen = false; $('#filters').classList.remove('open'); document.body.classList.remove('f-lock'); const g = $('.sortbar'); if (g) scrollTo(0, Math.min(scrollY, g.getBoundingClientRect().top + scrollY - 200)); });
+  $$('[data-msort]').forEach(sl => sl.onchange = () => { if (sl.dataset.msort==='t') techSort = sl.value; else pSort = sl.value; render(true); });
   $$('[data-tab]').forEach(b => b.onclick = () => { tab = b.dataset.tab; render(true); });
   $$('[data-tab-go]').forEach(b => b.onclick = e => { e.preventDefault(); tab = 'spec'; render(true); $('.tabs').scrollIntoView({behavior:'smooth', block:'start'}); });
   $$('[data-g]').forEach(b => b.onclick = () => { $('#gmain').innerHTML = `<img src="${IMG[b.dataset.g]}" alt="">`; $$('[data-g]').forEach(x => x.classList.toggle('on', x===b)); });
