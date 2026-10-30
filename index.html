@@ -943,6 +943,18 @@ body.pop-open{overflow:hidden}
 @media (max-width:760px){
   .lease-ban{background-image:linear-gradient(180deg,rgba(23,25,28,0) 0,rgba(23,25,28,0) 150px,#17191c 225px),var(--lbimg,none);background-size:auto,165% auto;background-position:0 0,78% 0;background-repeat:no-repeat;padding-top:210px;min-height:0}
 }
+/* ---------- плитки категорий на компе: 5 × 2, картинка слева ---------- */
+@media (min-width:761px){
+  .cats{grid-template-columns:repeat(5,minmax(0,1fr))!important;gap:10px}
+  .ct{flex-direction:row;align-items:center;gap:12px;padding:10px 14px 10px 10px}
+  .ct .th{width:64px;height:64px;flex:none;aspect-ratio:auto}
+  .ct .th img{padding:2px}
+  .ct-t{display:flex;flex-direction:column;gap:4px;min-width:0}
+  .ct small{margin-top:0}
+  .ct:hover{box-shadow:var(--shadow)}
+}
+@media (min-width:761px) and (max-width:1100px){.cats{grid-template-columns:repeat(2,minmax(0,1fr))!important}}
+@media (max-width:760px){.ct-t{display:contents}}
 </style>
 
 <a class="skip" href="#app">Перейти к содержимому</a>
@@ -1140,18 +1152,20 @@ function vHome(){
   const gparts = DATA.parts.filter(p=>p.cat==='vogele' && p.img).slice(0,10);
   const cnt = c => DATA.parts.filter(p=>p.cat===c).length;
   const nm = f => DATA.machines.filter(f).length;
+  const cnPic = (DATA.parts.find(p=>p.cat==='amtrac'&&p.img&&/^Звёздочка|^Ролик|^Башмак/.test(p.title))||firstPart('amtrac')||{}).img;
   const catTiles = [
+    ['Запчасти AMTRAC', cnt('amtrac'), 'позиция', cnPic, 'parts', 'amtrac'],
+    ['Запчасти Volvo ABG', cnt('volvo-abg'), 'позиция', firstPart('volvo-abg')?.img, 'parts', 'volvo-abg'],
+    ['Запчасти Vögele', cnt('vogele'), 'позиция', firstPart('vogele')?.img, 'parts', 'vogele'],
+    ['Датчики MOBA', cnt('moba'), 'позиция', firstPart('moba')?.img, 'parts', 'moba'],
+    ['Оборудование АБЗ', cnt('abz'), 'агрегат', firstPart('abz')?.img || DATA.abzPics[0], 'abz', ''],
     ['Мини-экскаваторы', nm(x=>x.sub==='mini'), 'модель', r319?.img, 'tech', 'mini'],
     ['Экскаваторы NDI', nm(x=>x.sub==='big'||x.sub==='small'), 'модель', ndi?.img, 'tech', 'big'],
     ['Катки', nm(x=>x.sub==='roller'), 'модель', lp?.img, 'tech', 'roller'],
     ['Погрузчики', nm(x=>x.sub==='loader'), 'модель', M('r906-mini-pogruzchik')?.img, 'tech', 'loader'],
-    ['Запчасти Volvo ABG', cnt('volvo-abg'), 'позиция', firstPart('volvo-abg')?.img, 'parts', 'volvo-abg'],
-    ['Запчасти Vögele', cnt('vogele'), 'позиция', firstPart('vogele')?.img, 'parts', 'vogele'],
-    ['Датчики MOBA', cnt('moba'), 'позиция', firstPart('moba')?.img, 'parts', 'moba'],
-    ['Запчасти AMTRAC', cnt('amtrac'), 'позиция', firstPart('amtrac')?.img, 'parts', 'amtrac'],
-    ['Оборудование АБЗ', cnt('abz'), 'агрегат', firstPart('abz')?.img || DATA.abzPics[0], 'abz', '']
+    ['Лизинг от 10%', 60, 'мес', IMG['lease-bg']?'lease-bg':null, 'conditions', '']
   ];
-  const word = (n, w) => w==='модель' ? plural(n,'модель','модели','моделей') : w==='позиция' ? plural(n,'позиция','позиции','позиций') : plural(n,'агрегат','агрегата','агрегатов');
+  const word = (n, w) => w==='мес' ? 'месяцев срок' : w==='модель' ? plural(n,'модель','модели','моделей') : w==='позиция' ? plural(n,'позиция','позиции','позиций') : plural(n,'агрегат','агрегата','агрегатов');
   return `<div class="wrap">
   <section class="promo">
     <div class="slider" id="slider">
@@ -1176,7 +1190,7 @@ function vHome(){
     </div>
   </section>
 
-  <section class="sec"><div class="cats" lang="ru">${catTiles.map(([h,n,w,im,go,f])=>`<a class="ct" href="#${go}" ${go==='tech'?`data-tf="${f}"`:go==='parts'?`data-pb="${f}"`:''}><span class="th">${pic(im)}</span><b>${h}</b><small>${fmt(n)} ${word(n,w)}</small></a>`).join('')}</div></section>
+  <section class="sec"><div class="cats" lang="ru">${catTiles.map(([h,n,w,im,go,f])=>`<a class="ct" href="#${go}" ${go==='tech'?`data-tf="${f}"`:go==='parts'?`data-pb="${f}"`:''}><span class="th">${pic(im)}</span><span class="ct-t"><b>${h}</b><small>${w==='мес'?'аванс, до 60 месяцев':fmt(n)+' '+word(n,w)}</small></span></a>`).join('')}</div></section>
 
 
 
@@ -1476,8 +1490,7 @@ function vCart(){
       <div class="sum"><span>Товары, ${cnt} шт.</span><span class="num">${money(sum)}</span></div><div class="sum"><span>Доставка, ${sc.t}</span><span>${sc.c===null?'рассчитает менеджер':sc.c===0?'бесплатно':money(sc.c)}</span></div>
       ${shipReg==='minsk'&&!hm&&sum<1000?`<div class="sum" style="color:var(--ok);font-size:13px"><span>До бесплатной доставки по Минску</span><span>${money(1000-sum)}</span></div>`:''}
       <div class="sum t"><span>Итого</span><span class="num">${money(sum+(sc.c||0))}</span></div><div class="ex-vat" style="text-align:right">в т. ч. НДС ${money((sum+(sc.c||0))/6)}</div>
-      <p class="price-note">Цены и наличие могут измениться. Итоговую стоимость и срок поставки менеджер подтвердит в счёте.</p>
-      <a class="btn btn-line" href="#kp" id="kpCart" style="width:100%;margin-top:12px">Сформировать КП в PDF</a>`; })()}
+      <p class="price-note">Цены и наличие могут измениться. Итоговую стоимость и срок поставки менеджер подтвердит в счёте.</p>`; })()}
       <form class="f" id="checkoutF" style="margin-top:16px">
         <label>Имя или компания<input id="ck-name" required autocomplete="name" value="${esc(acc?.company||'')}"></label>
         <label>Телефон<input id="ck-phone" required type="tel" placeholder="+375 __ ___-__-__" autocomplete="tel" value="${esc(acc?.phone||'')}"></label>
@@ -1548,7 +1561,7 @@ const fleetBy = Object.fromEntries(FLEET_MODELS.map(f=>[f.key,f]));
 const nextTO = h => { const step = 250, next = Math.ceil((+h+1)/step)*step; return {next, left: next - h}; };
 
 // ---------- кабинет ----------
-let accTab = 'orders', svcPrefill = '', kpSource = 'cart';
+let accTab = 'orders', svcPrefill = '';
 function vAccount(){
   if (!acc) return `<div class="wrap"><nav class="crumbs"><a href="#home">Главная</a><span>›</span><span>Кабинет</span></nav>
     <div class="page-h"><h1>Личный кабинет</h1></div>
@@ -1563,15 +1576,15 @@ function vAccount(){
       <button class="f-reset" id="demoLogin" style="margin-top:12px">Войти как демо-клиент</button>
     </div>
     <div class="panel"><h2>Что даёт кабинет</h2><ul>
-      <li>История заказов и повтор заказа в один клик</li><li>Счета и коммерческие предложения в PDF</li>
+      <li>История заказов и повтор заказа в один клик</li>
       <li>Парк техники: напоминания о ТО по моточасам и подбор запчастей под ваши машины</li>
       <li>Записи на сервис и выезд механика</li><li>Цены и условия для вашей компании</li></ul></div></div></div>`;
-  const tabs = [['orders','Заказы'],['fleet','Мой парк техники'],['docs','Документы'],['service','Сервис'],['favs','Избранное'],['profile','Профиль']];
+  const tabs = [['orders','Заказы'],['fleet','Мой парк техники'],['service','Сервис'],['favs','Избранное'],['profile','Профиль']];
   let body = '';
   if (accTab==='orders') body = allOrders().map(o=>`<div class="ord">
       <div class="ord-h"><b>Заказ ${o.no}</b><span>${ruDate(o.date)}</span>${o.demo?'<span class="badge b-order">демо</span>':''}<span class="grow"></span><b class="num">${money(orderSum(o))}</b></div>
       <div class="ord-items">${o.items.filter(([id])=>byId[id]).map(([id,n])=>`<a href="#${id}" class="oi"><span class="th">${pic(byId[id].img)}</span><span>${esc(byId[id].title)}<br><small>${n} шт. · ${money(byId[id].price*n)}</small></span></a>`).join('')}</div>
-      <div class="ord-a"><button class="btn btn-act btn-sm" data-repeat="${o.no}">Повторить заказ</button><a class="btn btn-line btn-sm" href="#kp" data-kp="${o.no}">Счёт PDF</a></div>
+      <div class="ord-a"><button class="btn btn-act btn-sm" data-repeat="${o.no}">Повторить заказ</button></div>
     </div>`).join('');
   if (accTab==='fleet') body = `<p style="color:var(--muted);margin-bottom:12px">Добавьте свои машины. Сайт напомнит о ТО по моточасам и покажет запчасти, которые к ним подходят.</p>
     <div class="fleet">${garage.map((g,i)=>{ const f = fleetBy[g.key]; if(!f) return ''; const t = nextTO(g.hours); const mm = f.kind==='machine'?byId[f.id]:null;
@@ -1581,8 +1594,6 @@ function vAccount(){
     <form class="f addm" id="addM"><label>Машина<select id="gm-key" required><option value="">Выберите модель</option>${FLEET_MODELS.map(f=>`<option value="${f.key}">${esc(f.title)}</option>`).join('')}</select></label>
       <label>Год<input id="gm-year" type="number" min="1995" max="2026" value="2022" required></label><label>Моточасы<input id="gm-hours" type="number" min="0" value="1180" required></label><label>Серийный номер<input id="gm-sn" placeholder="необязательно"></label>
       <button class="btn btn-act" type="submit">Добавить машину</button></form>`;
-  if (accTab==='docs') body = `<table class="spec">${allOrders().map(o=>`<tr><td>Счёт к заказу ${o.no} от ${ruDate(o.date)}${o.demo?' <span class="badge b-order">демо</span>':''}</td><td><span class="num">${money(orderSum(o))}</span> · <a href="#kp" data-kp="${o.no}" style="color:var(--bronze);font-weight:600">открыть</a></td></tr>`).join('')}</table>
-    <p style="color:var(--muted);margin-top:12px;font-size:13.5px">В рабочей версии здесь же акты сверки и товарно-транспортные накладные из 1С.</p>`;
   if (accTab==='service') body = (services.length ? services.map(sv=>`<div class="ord"><div class="ord-h"><b>Заявка ${sv.no}</b><span>${ruDate(sv.date)}, ${sv.slot}</span><span class="badge b-wait">ждёт подтверждения</span></div><p style="color:var(--ink-2)">${esc(sv.machine)} · ${esc(sv.work)} · ${esc(sv.place)}</p></div>`).join('') : '<div class="empty" style="padding:28px"><b>Заявок на сервис пока нет</b></div>') + `<div style="margin-top:12px"><a class="btn btn-act" href="#service">Записаться на сервис</a></div>`;
   if (accTab==='favs') { const l = Object.keys(favs).map(id=>byId[id]).filter(Boolean); body = l.length ? `<div class="pgrid">${l.map(card).join('')}</div>` : '<div class="empty" style="padding:28px"><b>В избранном пусто</b><span>Нажмите на сердечко на карточке товара.</span></div>'; }
   if (accTab==='profile') body = `<form class="f" id="profF" style="max-width:520px">
@@ -1647,27 +1658,6 @@ function vService(){
     <div class="panel"><h2>Как работает сервис</h2><ul><li>Механик выезжает на объект по всей Беларуси</li><li>Плановое ТО по интервалам производителя, расходники со склада</li><li>Диагностика гидравлики и электроники асфальтоукладчиков</li><li>Статус заявки виден в личном кабинете</li></ul></div></div></div>`;
 }
 
-// ---------- КП / счёт ----------
-function vKP(){
-  const o = kpSource!=='cart' && allOrders().find(x=>x.no===kpSource);
-  const items = o ? o.items.filter(([id])=>byId[id]) : Object.entries(cart).filter(([id])=>byId[id]);
-  const sum = items.reduce((a,[id,n])=>a+byId[id].price*n,0);
-  const no = o ? o.no.replace('AG','КП') : 'КП-' + String(Math.abs([...JSON.stringify(items)].reduce((a,c)=>a*31+c.charCodeAt(0)|0,7))%90000+10000);
-  const canPrint = /github\.io$/.test(location.hostname) || location.protocol==='file:';
-  if (!items.length) return `<div class="wrap"><div class="empty" style="margin-top:24px"><b>В корзине пусто</b><span>Добавьте товары, и КП соберётся автоматически.</span><a class="btn btn-act" href="#parts" data-pb="all">К запчастям</a></div></div>`;
-  return `<div class="wrap"><nav class="crumbs noprint"><a href="#home">Главная</a><span>›</span><a href="${o?'#account':'#cart'}">${o?'Кабинет':'Корзина'}</a><span>›</span><span>Коммерческое предложение</span></nav>
-    <div class="kp">
-      <div class="kp-h"><div><b class="wordmark" style="font-size:20px">AMTRAC GROUP</b><small>ООО «АмтракГрупп» · реквизиты уточняются<br>Минский р-н, а/г Колодищи, ул. Минская, 5 · +375 44 777-23-60</small></div>
-        <div style="text-align:right"><b>${o?'Счёт к заказу '+o.no:'Коммерческое предложение'}</b><br><span class="mono">№ ${no} от ${ruDate(o?o.date:today())}</span></div></div>
-      <p style="margin-top:18px"><b>Покупатель:</b> ${esc(acc?.company||'по запросу')}${acc?.unp?', УНП '+esc(acc.unp):''}</p>
-      <div style="overflow-x:auto"><table class="kpt"><tr><th>№</th><th>Наименование</th><th>Номер</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr>
-        ${items.map(([id,n],i)=>{const p=byId[id];return `<tr><td>${i+1}</td><td>${esc(p.title)}<small class="kp-sku">${p.sku?'№ '+esc(p.sku)+' · ':''}${money(p.price)} за шт.</small></td><td class="mono">${esc(p.sku||'—')}</td><td>${n}</td><td class="num">${money(p.price)}</td><td class="num">${money(p.price*n)}</td></tr>`}).join('')}
-</table></div>
-      <div class="kp-tot"><div><span>Итого с НДС</span><b class="num">${money(sum)}</b></div><div><span>в т. ч. НДС 20%</span><span class="num">${money(sum/6)}</span></div></div>
-      <p style="margin-top:14px;color:var(--ink-2)">Срок поставки: позиции «в наличии» отгружаются в день оплаты, остальные 2–4 недели. Предложение действительно 5 рабочих дней. Цены могут измениться, окончательная стоимость указывается в счёте.</p>
-      <div class="kp-a noprint">${canPrint?'<button class="btn btn-act" id="kpPrint">Печать или сохранить в PDF</button>':''}<a class="btn btn-line" href="https://wa.me/375447772360" target="_blank" rel="noopener">Отправить менеджеру</a></div>
-    </div></div>`;
-}
 
 // ---------- доставка в корзине ----------
 const REG = [['pickup','Самовывоз, Колодищи',0],['minsk','Минск, курьер',15],['mo','Минская область',25],['brest','Брестская обл.',35],['vit','Витебская обл.',35],['gom','Гомельская обл.',35],['grod','Гродненская обл.',35],['mog','Могилёвская обл.',35]];
@@ -1680,7 +1670,7 @@ function homeServices(){
     ['#account','Мой парк техники','Напомним о ТО и покажем запчасти под ваши машины','<path d="M3 17h13l3-5h2v5h-2"/><circle cx="7" cy="18" r="2"/><circle cx="16" cy="18" r="2"/><path d="M5 17V9h7l2 3"/>'],
     ['#service','Запись на сервис','Выезд механика или ТО на базе, удобное время','<path d="M14.5 6.5a4 4 0 0 0-5 5L4 17l3 3 5.5-5.5a4 4 0 0 0 5-5L15 12l-3-3Z"/>'],
     ['#conditions','Лизинг от 10%','Аванс от 10%, срок до 5 лет, расчёт платежа в карточке машины','<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>'],
-    ['#cart','КП и счёт в PDF','Из корзины в один клик, с НДС и сроками','<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>']];
+    ['#parts','Поиск по номеру детали','Вбейте номер с шильдика, покажем деталь с ценой','<circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5M8 11h6"/>']];
   return `<section class="sec"><div class="sec-h"><h2>Сервисы для бизнеса</h2><a href="#account">Личный кабинет ›</a></div><div class="bsv">${it.map(([h,t,d,ic])=>`<a href="${h}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ic}</svg><b>${t}</b><span>${d}</span></a>`).join('')}</div></section>`;
 }
 
@@ -1698,9 +1688,6 @@ function bindFeatures(){
   const pf = $('#profF'); if (pf) pf.onsubmit = e => { e.preventDefault(); Object.assign(acc,{company:$('#pf-company').value, unp:$('#pf-unp').value, name:$('#pf-name').value, phone:$('#pf-phone').value, addr:$('#pf-addr').value}); saveAll(); toast('Профиль сохранён'); render(true); };
   const lo = $('#logout'); if (lo) lo.onclick = () => { acc = null; saveAll(); render(); };
   $$('[data-repeat]').forEach(b => b.onclick = () => { const o = allOrders().find(x=>x.no===b.dataset.repeat); o.items.forEach(([id,n])=>{ if(byId[id]) cart[id]=(cart[id]||0)+n; }); store('amtrac-cart',cart); toast(`Заказ ${o.no} добавлен в корзину <a href="#cart" style="text-decoration:underline">Перейти</a>`); render(true); });
-  $$('[data-kp]').forEach(a => a.onclick = () => { kpSource = a.dataset.kp; });
-  const kc = $('#kpCart'); if (kc) kc.onclick = () => { kpSource = 'cart'; };
-  const kpP = $('#kpPrint'); if (kpP) kpP.onclick = () => window.print();
   const bf = $('#bulkF'); if (bf) bf.onsubmit = e => { e.preventDefault(); bulkText = $('#bulk-t').value; bulkRes = parseBulk(bulkText); render(true); };
   const be = $('#bulkEx'); if (be) be.onclick = () => { const ex = DATA.parts.filter(p=>p.sku&&p.img).slice(0,3).map((p,i)=>`${p.sku}; ${[2,1,4][i]}`).join('\n') + '\n99887766; 1'; $('#bulk-t').value = ex; };
   const bfi = $('#bulk-file'); if (bfi) bfi.onchange = () => { const f = bfi.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { bulkText = String(rd.result); bulkRes = parseBulk(bulkText); render(true); }; rd.readAsText(f); };
@@ -1773,7 +1760,7 @@ const route = () => (location.hash || '#home').slice(1) || 'home';
 function render(keep){
   const r = route(), y = scrollY, fsY = ($('#filters')||{}).scrollTop||0;
   clearInterval(slideTimer);
-  const V = {tech:vTech, parts:vParts, abz:vAbz, conditions:vConditions, about:vAbout, contacts:vContacts, cart:vCart, favorites:vFav, compare:vCompare, account:vAccount, bulk:vBulk, service:vService, kp:vKP};
+  const V = {tech:vTech, parts:vParts, abz:vAbz, conditions:vConditions, about:vAbout, contacts:vContacts, cart:vCart, favorites:vFav, compare:vCompare, account:vAccount, bulk:vBulk, service:vService};
   app.innerHTML = V[r] ? V[r]() : byId[r] ? vProduct(byId[r]) : vHome();
   $$('#quick a').forEach(a => a.classList.toggle('on', a.dataset.qR===r && ((r==='tech' && a.dataset.tf===techF) || (r==='parts' && a.dataset.pb===pBrand) || r==='abz')));
   $$('#tabbar a').forEach(a => a.classList.toggle('on', a.dataset.tb===r || (a.dataset.tb==='tech' && isM(byId[r])) || (a.dataset.tb==='parts' && r.startsWith('p-'))));
