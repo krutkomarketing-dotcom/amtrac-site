@@ -365,6 +365,15 @@ img{display:block}
 .tabs{display:flex;gap:4px;margin-top:28px;border-bottom:1px solid var(--line-2);overflow-x:auto}
 .tabs button{padding:12px 14px;font-weight:600;color:var(--muted);border-bottom:2px solid transparent;margin-bottom:-1px;white-space:nowrap}
 .tabs button.on{color:var(--ink);border-bottom-color:var(--ink)}
+
+.tabs .tl-s{display:none}
+@media (max-width:760px){
+  .tabs{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;overflow:visible;gap:0}
+  .tabs button{padding:12px 4px;font-size:13px;text-align:center}
+  .tabs .tl-f{display:none}.tabs .tl-s{display:inline}
+  .tabp .kit-row{grid-template-columns:minmax(0,1fr) auto;gap:10px;font-size:14px}
+  .tabp .kit-row>span:last-child{display:none}
+}
 .tabp{background:var(--card);border-radius:0 0 var(--r-l) var(--r-l);padding:20px 24px;margin-bottom:12px}
 .spec{width:100%;border-collapse:collapse;font-size:14.5px}
 .spec td{padding:10px 0;border-bottom:1px solid var(--line);vertical-align:top}
@@ -1261,7 +1270,7 @@ function vProduct(p){
         </div>
       </aside>
     </div>
-    <div class="tabs" role="tablist">${(m?[['spec','Характеристики'],['to','Расходники для ТО'],['desc','Описание']]:[['desc','Описание'],['spec','Характеристики']]).map(([k,t])=>`<button role="tab" aria-selected="${tab===k}" class="${tab===k?'on':''}" data-tab="${k}">${t}</button>`).join('')}</div>
+    <div class="tabs" role="tablist">${(m?[['spec','Характеристики','Характеристики'],['to','Расходники для ТО','Расходники'],['desc','Описание','Описание']]:[['desc','Описание','Описание'],['spec','Характеристики','Характеристики']]).map(([k,t,sh])=>`<button role="tab" aria-selected="${tab===k}" class="${tab===k?'on':''}" data-tab="${k}"><span class="tl-f">${t}</span><span class="tl-s">${sh}</span></button>`).join('')}</div>
     <div class="tabp">
       ${tab==='spec' ? `<div style="overflow-x:auto"><table class="spec">${attrs.map(([k,v])=>`<tr><td>${esc(k)}</td><td>${esc(v)}</td></tr>`).join('')}</table></div>` : ''}
       ${tab==='to' ? `<p style="color:var(--muted);margin-bottom:6px">Комплект подбираем по серийному номеру машины. Добавьте его в корзину, менеджер уточнит позиции.</p>${kit.map(([n,t])=>`<div class="kit-row"><span>${n}</span><span class="badge b-order">${t}</span><span class="mono" style="color:var(--muted)">по VIN</span></div>`).join('')}<div style="margin-top:14px"><button class="btn btn-act" data-kit>Добавить комплект ТО</button></div>` : ''}
