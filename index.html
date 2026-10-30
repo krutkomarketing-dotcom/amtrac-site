@@ -13,7 +13,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="color-scheme" content="light only">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow, noai, noimageai">
 <meta name="copyright" content="© 2026 krutkomarketing-dotcom. Все права защищены">
 <meta name="author" content="krutkomarketing-dotcom (https://github.com/krutkomarketing-dotcom)">
@@ -71,7 +71,7 @@
 [hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{background:var(--page);color:var(--ink);font:15px/1.5 var(--f);-webkit-font-smoothing:antialiased}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--card)}
+
 a{color:inherit;text-decoration:none}
 button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
 h1,h2,h3{margin:0;line-height:1.15;text-wrap:balance;letter-spacing:-.015em}
@@ -92,7 +92,7 @@ img{display:block}
 .util .city{display:flex;gap:6px;align-items:center;color:var(--ink-2)}
 .util .sp{margin-left:auto}
 .util .demo{color:var(--bronze)}
-.hdr{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;background:var(--card);box-shadow:0 1px 0 var(--line)}
+.hdr{position:sticky;top:0px;z-index:50;background:var(--card);box-shadow:0 1px 0 var(--line)}
 .hdr-main{display:flex;align-items:center;gap:16px;padding-block:12px}
 .brand{display:flex;align-items:center;gap:10px;flex-shrink:0}
 .logo{width:42px;height:42px;flex-shrink:0;position:relative;display:block}
@@ -321,7 +321,7 @@ img{display:block}
 .page-h h1{font-size:clamp(24px,2.6vw,32px);font-weight:800}
 .page-h span{color:var(--muted)}
 .cat-lay{display:grid;grid-template-columns:260px minmax(0,1fr);gap:16px;margin-top:16px;align-items:start}
-.filters{background:var(--card);border-radius:var(--r-l);padding:6px 16px 16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 120px)}
+.filters{background:var(--card);border-radius:var(--r-l);padding:6px 16px 16px;position:sticky;top:calc(0px + 120px)}
 .fg{padding:14px 0;border-top:1px solid var(--line)}
 .fg:first-child{border-top:0}
 .fg h4{margin:0 0 10px;font-size:14.5px;font-weight:700}
@@ -370,7 +370,7 @@ img{display:block}
 .kv a.all{display:block;padding:10px 0;font-size:14px;color:var(--bronze);font-weight:600;border-top:1px solid var(--line)}
 .fits{display:flex;gap:6px;flex-wrap:wrap}
 .fits span{background:var(--card);border:1px solid var(--line);border-radius:var(--r-s);padding:5px 10px;font-size:13.5px}
-.buybox{background:var(--card);border-radius:var(--r-l);padding:20px;display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 120px);box-shadow:var(--shadow)}
+.buybox{background:var(--card);border-radius:var(--r-l);padding:20px;display:flex;flex-direction:column;gap:14px;position:sticky;top:calc(0px + 120px);box-shadow:var(--shadow)}
 .buybox .big{font-size:32px;font-weight:800;letter-spacing:-.03em;font-variant-numeric:tabular-nums;line-height:1}
 .buybox .vat{font-size:12.5px;color:var(--muted);margin-top:4px}
 .buybox .btn{width:100%;height:48px}
@@ -555,7 +555,7 @@ form.f{display:flex;flex-direction:column;gap:12px}
 @media (max-width:1000px){.bsv{grid-template-columns:repeat(3,minmax(0,1fr))}}
 @media (max-width:600px){.bsv{grid-template-columns:repeat(2,minmax(0,1fr))}.bsv a{padding:12px}.bsv span{display:none}}
 .acc{display:grid;grid-template-columns:220px minmax(0,1fr);gap:16px;margin-top:16px;align-items:start}
-.acc-nav{background:var(--card);border-radius:var(--r-l);padding:8px;display:flex;flex-direction:column;gap:2px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 120px)}
+.acc-nav{background:var(--card);border-radius:var(--r-l);padding:8px;display:flex;flex-direction:column;gap:2px;position:sticky;top:calc(0px + 120px)}
 .acc-nav button{text-align:left;padding:10px 12px;border-radius:var(--r-s);font-size:14.5px}
 .acc-nav button:hover{background:var(--sunk)}
 .acc-nav button.on{background:var(--act);color:var(--act-fg);font-weight:600}
@@ -894,7 +894,7 @@ body.pop-open{overflow:hidden}
 .f-top,.f-foot,.msort{display:none}
 .fcnt{font-style:normal;display:inline-grid;place-items:center;min-width:18px;height:18px;padding:0 5px;border-radius:9px;background:var(--cta);color:var(--cta-fg);font-size:11px;font-weight:700;margin-left:6px}
 @media (max-width:900px){
-  .sortbar{position:sticky;top:calc(var(--hh,0px) + env(safe-area-inset-top,0px));z-index:20;background:var(--page);margin:0 -16px 12px;padding:8px 16px;box-shadow:0 1px 0 var(--line);overflow:visible!important;flex-wrap:nowrap}
+  .sortbar{position:sticky;top:calc(var(--hh,0px) + 0px);z-index:20;background:var(--page);margin:0 -16px 12px;padding:8px 16px;box-shadow:0 1px 0 var(--line);overflow:visible!important;flex-wrap:nowrap}
   .sortbar button.s{display:none}
   .msort{display:block;position:relative;flex:1 1 auto;min-width:0}
   .msort select{appearance:none;-webkit-appearance:none;width:100%;height:38px;border:1px solid var(--line-2);border-radius:var(--r-s);background:var(--card);color:var(--ink);font:500 14px var(--f);padding:0 30px 0 12px}
@@ -903,7 +903,7 @@ body.pop-open{overflow:hidden}
   .sortbar .q{display:none!important}
   .filters.open{display:block;position:fixed;inset:0;z-index:90;border-radius:0;overflow-y:auto;overscroll-behavior:contain;padding:0 16px calc(84px + env(safe-area-inset-bottom,0px));animation:fIn .22s ease-out}
   @keyframes fIn{from{transform:translateY(16px);opacity:0}to{transform:none;opacity:1}}
-  .filters.open .f-top{display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2;background:var(--card);margin:0 -16px 4px;padding:calc(14px + env(safe-area-inset-top,0px)) 16px 12px;box-shadow:0 1px 0 var(--line)}
+  .filters.open .f-top{display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:2;background:var(--card);margin:0 -16px 4px;padding:calc(14px + 0px) 16px 12px;box-shadow:0 1px 0 var(--line)}
   .f-top b{font-size:20px;font-weight:800}
   .f-x{width:40px;height:40px;border-radius:50%;background:var(--sunk);font-size:24px;line-height:1;display:grid;place-items:center}
   .filters.open .f-foot{display:block;position:fixed;left:0;right:0;bottom:0;padding:12px 16px calc(12px + env(safe-area-inset-bottom,0px));background:var(--card);box-shadow:0 -1px 0 var(--line),0 -8px 24px rgba(0,0,0,.06)}
@@ -1453,7 +1453,7 @@ function vCart(){
   return `<div class="wrap"><nav class="crumbs"><a href="#home">Главная</a><span>›</span><span>Корзина</span></nav>
   <div class="page-h"><h1>Корзина</h1>${cnt?`<span>${cnt} ${plural(cnt,'товар','товара','товаров')}</span>`:''}</div>
   ${items.length ? `<div class="ipage"><div class="panel">${items.map(([id,n])=>{const p=byId[id];return `<div class="ci"><a class="th" href="#${p.id}">${pic(p.img)}</a><div style="min-width:0"><a class="nm" href="#${p.id}">${esc(p.title)}</a><div style="margin-top:4px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">${badge(p.st)}${p.sku?`<span class="mono" style="color:var(--muted)">№ ${esc(p.sku)}</span>`:''}</div></div><div class="qty"><button data-qd="-1" data-id="${id}" aria-label="Меньше">−</button><span>${n}</span><button data-qd="1" data-id="${id}" aria-label="Больше">+</button></div><div class="pr">${money(p.price*n)}</div><button class="rm" data-rm="${id}" aria-label="Удалить">×</button></div>`}).join('')}</div>
-    <div class="panel" style="position:sticky;top:calc(env(safe-area-inset-top,0px) + 120px)">
+    <div class="panel" style="position:sticky;top:calc(0px + 120px)">
       ${(()=>{ const hm = items.some(([id])=>isM(byId[id])); const sc = shipCost(sum, hm); return `
       <label class="f" style="margin-bottom:10px"><span style="font-size:13px;color:var(--muted)">Доставка</span><select id="shipReg" class="sel">${REG.map(([k,t])=>`<option value="${k}" ${shipReg===k?'selected':''}>${t}</option>`).join('')}</select></label>
       <div class="sum"><span>Товары, ${cnt} шт.</span><span class="num">${money(sum)}</span></div><div class="sum"><span>Доставка, ${sc.t}</span><span>${sc.c===null?'рассчитает менеджер':sc.c===0?'бесплатно':money(sc.c)}</span></div>
