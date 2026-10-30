@@ -1,3 +1,6 @@
+# © 2026 krutkomarketing-dotcom. Все права защищены. Правообладатель: владелец GitHub-аккаунта krutkomarketing-dotcom.
+# Proprietary site. AI crawlers and training are not permitted.
+
 User-agent: GPTBot
 Disallow: /
 
