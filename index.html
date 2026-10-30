@@ -181,9 +181,11 @@ img{display:block}
 .slide.s-dark .pic img{border-radius:var(--r-m);object-fit:cover;max-height:280px}
 
 .dots{position:absolute;left:40px;bottom:22px;display:flex;gap:6px;z-index:3}
-.dots button{width:22px;height:4px;border-radius:2px;background:var(--line-2);transition:width .25s}
-.dots button.on{background:var(--ink);width:36px}
-.s-dark-on .dots button{background:#ffffff40}.s-dark-on .dots button.on{background:#fff}
+.dots{align-items:center}
+.dots button{width:8px;height:8px;border-radius:4px;background:var(--line-2);transition:width .3s,background .3s;padding:0}
+.dots button:hover{background:var(--muted-2)}
+.dots button.on{background:var(--cta);width:26px}
+.s-dark-on .dots button{background:#ffffff55}.s-dark-on .dots button.on{background:var(--cta)}
 .arr{position:absolute;bottom:12px;right:12px;display:flex;gap:6px;z-index:3}
 .arr button{width:36px;height:36px;border-radius:var(--r-s);background:var(--card);color:var(--ink);box-shadow:var(--shadow);display:grid;place-items:center;font-size:20px}
 .side-promo{display:grid;grid-template-rows:1fr 1fr;gap:12px}
@@ -688,10 +690,12 @@ body.pop-open{overflow:hidden}
   .sp-card h3{font-size:16px}.sp-card p{display:none}.sp-card .go{margin-top:6px}
   .sp-card .numx{font-size:16px;margin-bottom:2px}
   /* categories: icon grid */
-  .cats{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .cats{display:flex;overflow-x:auto;scrollbar-width:none;gap:8px;margin-right:-16px;padding-right:16px;scroll-snap-type:x proximity}
+  .cats::-webkit-scrollbar{display:none}
+  .ct{flex:0 0 104px;scroll-snap-align:start}
   .ct{padding:6px 6px 8px;gap:5px;border-radius:var(--r-m)}
   .ct .th{border-radius:var(--r-s)}
-  .ct b{font-size:11.5px;font-weight:500;line-height:1.2;text-align:center}
+  .ct b{font-size:12px;font-weight:500;line-height:1.2;text-align:center;overflow-wrap:break-word;hyphens:auto}
   .ct small{display:none}
   /* trust */
   .trust{grid-template-columns:1fr 1fr}
@@ -757,9 +761,17 @@ body.pop-open{overflow:hidden}
   .util .mono{order:-1;font-size:12.5px}
   .cur{font-size:12px;padding:1px 4px}
   /* слайдер: картинка не налезает на текст */
-  .slide .pic{width:38%;height:34%;top:14px;right:8px}
-  .slide h2{max-width:12.5ch;font-size:21px}
-  .slider{height:350px}
+  .slider{height:470px}
+  .slide{grid-template-columns:1fr!important;grid-template-rows:176px 1fr!important;align-items:stretch!important}
+  .slide .pic{order:-1;position:static!important;width:100%!important;height:176px!important;padding:16px 18px 0!important;display:flex;align-items:center;justify-content:center;background:var(--card)}
+  .slide .pic img{max-height:160px!important;width:auto!important;max-width:100%;object-fit:contain}
+  .slide .tx{padding:14px 18px 44px!important;gap:8px;justify-content:flex-start}
+  .slide h2{max-width:none!important;font-size:22px;line-height:1.1}
+  .slide p{font-size:13.5px;line-height:1.45}
+  .slide .pr b{font-size:20px}
+  .slide.s-dark{grid-template-rows:1fr!important}
+  .slide.s-dark .tx{align-self:end;background:linear-gradient(0deg,rgba(23,25,28,.96) 60%,rgba(23,25,28,0));padding-top:70px!important}
+  .dots{bottom:16px;left:50%!important;transform:translateX(-50%);gap:6px}
   /* узлы в подборе: лента с фото */
   .pick .nodes{display:flex;overflow-x:auto;scrollbar-width:none;gap:6px;margin-right:-14px;padding-right:14px;padding-bottom:2px}
   .pick .nodes::-webkit-scrollbar{display:none}
@@ -811,7 +823,7 @@ body.pop-open{overflow:hidden}
   .crumbs{padding-top:12px;font-size:12px}
 }
 
-@media (max-width:360px){.cats{grid-template-columns:repeat(3,minmax(0,1fr))}.wordmark{font-size:13px}}
+@media (max-width:360px){.wordmark{font-size:13px}}
 </style>
 
 <a class="skip" href="#app">Перейти к содержимому</a>
@@ -1032,7 +1044,7 @@ function vHome(){
     </div>
   </section>
 
-  <section class="sec"><div class="cats">${catTiles.map(([h,n,w,im,go,f])=>`<a class="ct" href="#${go}" ${go==='tech'?`data-tf="${f}"`:go==='parts'?`data-pb="${f}"`:''}><span class="th">${pic(im)}</span><b>${h}</b><small>${fmt(n)} ${word(n,w)}</small></a>`).join('')}</div></section>
+  <section class="sec"><div class="cats" lang="ru">${catTiles.map(([h,n,w,im,go,f])=>`<a class="ct" href="#${go}" ${go==='tech'?`data-tf="${f}"`:go==='parts'?`data-pb="${f}"`:''}><span class="th">${pic(im)}</span><b>${h}</b><small>${fmt(n)} ${word(n,w)}</small></a>`).join('')}</div></section>
 
 
   <section class="sec"><div class="sec-h"><h2>Подбор запчастей по машине</h2><a href="#parts" data-pb="all">Весь каталог ›</a></div>
@@ -1095,6 +1107,8 @@ function bindSlider(){
   dots.forEach(d => d.onclick = () => { go(+d.dataset.sl); restart(); });
   $$('[data-sl-step]', s).forEach(b => b.onclick = () => { go(slide + +b.dataset.slStep); restart(); });
   s.onmouseenter = () => clearInterval(slideTimer); s.onmouseleave = restart;
+  let sx = null; s.addEventListener('touchstart', e => { sx = e.touches[0].clientX; clearInterval(slideTimer); }, {passive:true});
+  s.addEventListener('touchend', e => { if (sx===null) return; const dx = e.changedTouches[0].clientX - sx; if (Math.abs(dx) > 40) go(slide + (dx < 0 ? 1 : -1)); sx = null; restart(); }, {passive:true});
   go(0); restart();
 }
 function plural(n,a,b,c){ n=Math.abs(n)%100; const n1=n%10; if(n>10&&n<20) return c; if(n1>1&&n1<5) return b; if(n1===1) return a; return c; }
