@@ -295,6 +295,7 @@ img{display:block}
 .split{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);gap:12px}
 @media (max-width:860px){.split{grid-template-columns:1fr}}
 .lease-ban{background:#17191c center right/cover no-repeat;min-height:330px;color:#f1f2f4;border-radius:var(--r-l);padding:28px;display:flex;flex-direction:column;gap:14px;position:relative;overflow:hidden}
+.lease-ban{background-image:linear-gradient(90deg,#17191c 0%,#17191c 30%,rgba(23,25,28,.55) 58%,rgba(23,25,28,0) 80%),var(--lbimg,none)}
 .lease-ban h3{font-size:26px;font-weight:800;letter-spacing:-.02em;max-width:16ch}
 .lease-ban p{max-width:34ch!important}
 .lease-ban p{color:#a8adb5;max-width:46ch}
@@ -938,6 +939,10 @@ body.pop-open{overflow:hidden}
   .hdr-main .cat-btn{order:2;width:44px;height:44px;padding:0;justify-content:center}
   .hdr-main .search{order:3}
 }
+/* ---------- лизинг на телефоне: экскаватор сверху, текст под ним ---------- */
+@media (max-width:760px){
+  .lease-ban{background-image:linear-gradient(180deg,rgba(23,25,28,0) 0,rgba(23,25,28,0) 150px,#17191c 225px),var(--lbimg,none);background-size:auto,165% auto;background-position:0 0,78% 0;background-repeat:no-repeat;padding-top:210px;min-height:0}
+}
 </style>
 
 <a class="skip" href="#app">Перейти к содержимому</a>
@@ -946,7 +951,7 @@ body.pop-open{overflow:hidden}
   <a href="#bulk">Заказ по списку</a><a href="#service">Запись на сервис</a><a href="#conditions">Доставка и лизинг</a><a href="#about">О компании</a>
   <span class="demo sp">Макет: цены и наличие для примера</span>
   <select id="curSel" class="cur" aria-label="Валюта цен"><option value="BYN">BYN</option><option value="USD">USD</option><option value="RUB">RUB</option></select>
-  <span class="mono" style="color:var(--ink)">+375 44 777-23-60</span>
+  <a class="mono" style="color:var(--ink)" href="tel:+375447772360">+375 44 777-23-60</a>
 </div></div>
 <header class="hdr" id="hdr">
   <div class="wrap hdr-main">
@@ -1001,7 +1006,7 @@ body.pop-open{overflow:hidden}
 <footer class="ftr">
   <div class="wrap">
     <div>
-      <div class="ph mono">+375 44 777-23-60</div>
+      <a class="ph mono" href="tel:+375447772360" style="display:block">+375 44 777-23-60</a>
       <p style="margin-top:6px">Пн–Пт 9:00–18:00, WhatsApp и Viber</p>
       <p style="margin-top:14px"><a href="https://yandex.by/maps/org/torgovy_dom_rippabel/231430715389/?ll=27.784441%2C53.956022&z=16" target="_blank" rel="noopener">Минский р-н, а/г Колодищи, ул. Минская, 5, оф. 256</a></p>
     </div>
@@ -1184,7 +1189,7 @@ function vHome(){
   <section class="sec"><div class="sec-h"><h2>Хиты продаж</h2><span class="sec-r"><a href="#tech" data-tf="all">Вся техника ›</a><span class="sx"><button type="button" data-sx="-1" aria-label="Прокрутить назад">‹</button><button type="button" data-sx="1" aria-label="Прокрутить вперёд">›</button></span></span></div><div class="hscroll">${hits.map(card).join('')}</div></section>
 
   <section class="sec split">
-    <div class="lease-ban" style="${IMG['lease-bg']?`background-image:linear-gradient(90deg,#17191c 0%,#17191c 30%,rgba(23,25,28,.55) 58%,rgba(23,25,28,0) 80%),url(${IMG['lease-bg']})`:''}"><span class="badge b-lease" style="align-self:flex-start">Лизинг</span><h3>Технику можно взять в лизинг с авансом от 10%</h3><p>Платёж видно в карточке машины. Оформляем через банки-партнёры, срок до 60 месяцев.</p>
+    <div class="lease-ban" style="${IMG['lease-bg']?`--lbimg:url(${IMG['lease-bg']})`:''}"><span class="badge b-lease" style="align-self:flex-start">Лизинг</span><h3>Технику можно взять в лизинг с авансом от 10%</h3><p>Платёж видно в карточке машины. Оформляем через банки-партнёры, срок до 60 месяцев.</p>
       <div class="row"><div><b>10%</b><span>минимальный аванс</span></div><div><b>60 мес</b><span>максимальный срок</span></div></div>
       <button type="button" class="btn btn-act" data-pop="lease">Рассчитать лизинг</button></div>
     <div class="arts">
@@ -1442,7 +1447,7 @@ function vContacts(){
   <div class="ipage"><div style="display:flex;flex-direction:column;gap:16px;min-width:0">
     <div class="map"><div class="rd"></div><div class="pin"><b>Склад и офис, Колодищи</b><i></i></div><iframe src="https://yandex.by/map-widget/v1/?ll=27.784441%2C53.956022&z=16&oid=231430715389&ol=biz" title="Склад и офис в Колодищах на Яндекс Картах" loading="lazy" allowfullscreen></iframe></div>
     <div class="map-a"><a class="btn btn-act" href="https://yandex.by/maps/?rtext=~53.956022%2C27.784441&rtt=auto" target="_blank" rel="noopener">Построить маршрут</a><a class="btn btn-line" href="${YMAP}" target="_blank" rel="noopener">Открыть в Яндекс Картах</a></div>
-    <div class="panel">${rows.map(([s,b])=>`<div class="crow"><span>${s}</span><b class="mono" style="font-size:16px">${b}<button class="copy" data-copy="${b}">копировать</button></b></div>`).join('')}
+    <div class="panel">${rows.map(([s,b])=>`<div class="crow"><span>${s}</span><b class="mono" style="font-size:16px"><a href="tel:${b.replace(/[^+\d]/g,'')}">${b}</a><button class="copy" data-copy="${b}">копировать</button></b></div>`).join('')}
       <div class="crow"><span>Адрес</span><b>223051, Минский р-н, а/г Колодищи, ул. Минская, 5, оф. 256</b></div>
       <div class="crow"><span>Режим работы</span><b>Пн–Пт 9:00–18:00</b></div></div>
   </div>${formBlock('Напишите нам','Ответим в рабочее время, обычно в течение часа.','cf')}</div></div>`;
