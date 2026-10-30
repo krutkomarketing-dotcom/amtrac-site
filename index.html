@@ -41,6 +41,7 @@
   --shadow:0 1px 2px rgba(0,0,0,.4); --shadow-lg:0 12px 40px rgba(0,0,0,.6); color-scheme:dark}
 
 *{box-sizing:border-box}
+[hidden]{display:none!important}
 html{scroll-behavior:smooth}
 body{background:var(--page);color:var(--ink);font:15px/1.5 var(--f);-webkit-font-smoothing:antialiased}
 body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:var(--card)}
@@ -233,7 +234,14 @@ img{display:block}
 .pc-buy{margin-top:auto;padding-top:12px}
 .pc-buy .btn{width:100%;height:38px;font-size:14px}
 .pc-buy .btn.in{background:var(--ok-soft);color:var(--ok)}
-.hscroll{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(205px,calc((100% - 40px)/5));gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:thin}
+.hscroll{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(205px,calc((100% - 40px)/5));gap:10px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;overscroll-behavior-x:contain}
+.hscroll::-webkit-scrollbar{display:none}
+.sec-r{display:flex;align-items:center;gap:14px}
+.sx{display:flex;gap:6px}
+.sx button{width:36px;height:36px;border-radius:var(--r-s);background:var(--card);color:var(--ink);font-size:20px;line-height:1;display:grid;place-items:center;box-shadow:var(--shadow);transition:opacity .2s,background .2s}
+.sx button:hover{background:var(--sunk)}
+.sx button:disabled{opacity:.35;cursor:default;box-shadow:none}
+@media (hover:none){.sx{display:none}}
 .hscroll>*{scroll-snap-align:start}
 @media (max-width:560px){.pgrid{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.hscroll{grid-auto-columns:46%}.pc{padding:8px 8px 10px}.pc-price b{font-size:17px}.pc-tags{left:12px;top:12px}.fav{right:10px;top:10px}}
 
@@ -310,8 +318,8 @@ img{display:block}
 .gal.single{grid-template-columns:1fr}
 .info{display:flex;flex-direction:column;gap:14px;min-width:0}
 .info h1{font-size:clamp(22px,2.2vw,28px);font-weight:800;line-height:1.15}
-.info .codes{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--muted)}
-.info .codes .mono{background:var(--card);border:1px solid var(--line);border-radius:var(--r-xs);padding:2px 6px;color:var(--ink-2)}
+.info .codes,.m-title .codes{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--muted)}
+.info .codes .mono,.m-title .codes .mono{background:var(--card);border:1px solid var(--line);border-radius:var(--r-xs);padding:2px 6px;color:var(--ink-2)}
 .kv{background:var(--card);border-radius:var(--r-l);padding:6px 18px}
 .kv>div{display:flex;gap:12px;padding:9px 0;border-top:1px dashed var(--line);font-size:14px}
 .kv>div:first-child{border-top:0}
@@ -414,6 +422,107 @@ form.f{display:flex;flex-direction:column;gap:12px}
 .wa{position:fixed;right:calc(16px + env(safe-area-inset-right,0px));bottom:calc(16px + env(safe-area-inset-bottom,0px));width:52px;height:52px;border-radius:50%;background:#25d366;display:grid;place-items:center;box-shadow:0 6px 20px rgba(0,0,0,.2);z-index:40}
 .wa svg{width:28px;height:28px;color:#fff}
 .scrim{position:fixed;inset:0;background:rgba(15,17,20,.35);z-index:45}
+
+/* ---------- mobile (marketplace app feel) ---------- */
+.tabbar,.mbuy,.m-title{display:none}
+@media (max-width:760px){
+  body{font-size:14.5px;padding-bottom:calc(64px + env(safe-area-inset-bottom,0px))}
+  .util .wrap>a,.util .demo{display:none}
+  .util .wrap{justify-content:space-between}
+  .hdr-main{padding-block:10px}
+  .icons .ic:not(.cart-ic){display:none}
+  .quick{padding-bottom:6px}
+  .quick a{font-size:13.5px;padding:5px 10px;background:var(--sunk)}
+  .wa{bottom:calc(76px + env(safe-area-inset-bottom,0px));width:46px;height:46px}
+  .wa svg{width:24px;height:24px}
+  .sec{margin-top:22px}
+  .sec-h{flex-wrap:nowrap;margin-bottom:10px}
+  .sec-h h2{font-size:19px}
+  .sec-h a{font-size:13.5px;white-space:nowrap}
+  .sx{display:none}
+  /* slider */
+  .promo{margin-top:10px;gap:10px}
+  .slider{min-height:0;height:330px}
+  .slide{grid-template-columns:1fr;grid-template-rows:1fr;align-items:end}
+  .slide .pic{position:absolute;right:-6px;top:10px;width:46%;height:46%;padding:0}
+  .slide .pic img{max-height:100%}
+  .slide.s-dark .pic{display:none}
+  .slide .tx{padding:18px 18px 40px;gap:8px}
+  .slide h2{font-size:22px;max-width:15ch}
+  .slide p{font-size:13.5px}
+  .slide .pr b{font-size:20px}
+  .slide .btn{height:40px;font-size:14px}
+  .arr{display:none}
+  .dots{left:18px;bottom:16px}
+  .side-promo{grid-template-columns:1fr}
+  .side-promo .sp-card:not(.search-card){display:none}
+  .sp-card{padding:14px 16px;grid-template-columns:minmax(0,1fr) 64px}
+  .sp-card .im{width:64px;height:64px}
+  .sp-card h3{font-size:16px}.sp-card p{display:none}.sp-card .go{margin-top:6px}
+  .sp-card .numx{font-size:16px;margin-bottom:2px}
+  /* categories: icon grid */
+  .cats{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+  .ct{padding:6px 6px 8px;gap:5px;border-radius:var(--r-m)}
+  .ct .th{border-radius:var(--r-s)}
+  .ct b{font-size:11.5px;font-weight:500;line-height:1.2;text-align:center}
+  .ct small{display:none}
+  /* trust */
+  .trust{grid-template-columns:1fr 1fr}
+  .trust>div{padding:12px;gap:8px;border-left:0;border-top:0}
+  .trust>div:nth-child(odd){border-right:1px solid var(--line)}
+  .trust>div:nth-child(n+3){border-top:1px solid var(--line)}
+  .trust span span{display:none}
+  .trust b{font-size:13px}
+  .trust svg{width:22px;height:22px}
+  /* cards */
+  .hscroll{grid-auto-columns:44%;gap:8px;margin-right:calc(-1 * max(16px,env(safe-area-inset-right,0px)));padding-right:16px}
+  .pc-lease{font-size:11.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .pc-title{-webkit-line-clamp:2;font-size:13.5px;min-height:2.7em}
+  .pc-meta{font-size:11.5px}
+  .pc-buy .btn{height:36px;font-size:13.5px}
+  .badge{font-size:11px;padding:2px 6px}
+  .brands{grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}
+  .brands a{padding:12px 6px}.brands b{font-size:13px}.brands span{font-size:11px}
+  .lease-ban{padding:20px}.lease-ban h3{font-size:21px}
+  .arts{padding:4px 16px 6px}
+  .seo{padding:20px}
+  /* catalog */
+  .page-h h1{font-size:22px}
+  .cat-lay{margin-top:10px}
+  .sortbar{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-16px;padding-right:16px}
+  .sortbar::-webkit-scrollbar{display:none}
+  .sortbar .grow{display:none}
+  .sortbar>*{flex-shrink:0}
+  .sortbar .q{order:-1;flex:0 0 220px}
+  /* product page */
+  .m-title{display:block;margin-top:6px}
+  .m-title .h1{font-size:20px;font-weight:800;line-height:1.2}
+  .m-title .codes{margin-top:8px}
+  .info>h1,.info>.codes{display:none}
+  .prod{margin-top:10px;gap:10px}
+  .gal{padding:8px}
+  .gal .tl button{width:52px;height:52px}
+  .buybox{padding:16px;box-shadow:none}
+  .buybox .big{font-size:26px}
+  .tabs{margin-top:18px}
+  .tabp{padding:14px 16px}
+  .spec td{font-size:13.5px}
+  .spec td:first-child{width:58%;padding-right:12px}
+  /* bottom bars */
+  .tabbar{display:grid;grid-template-columns:repeat(5,1fr);position:fixed;left:0;right:0;bottom:0;z-index:55;background:var(--card);border-top:1px solid var(--line);padding:6px max(4px,env(safe-area-inset-right,0px)) calc(6px + env(safe-area-inset-bottom,0px)) max(4px,env(safe-area-inset-left,0px))}
+  .tabbar a{display:flex;flex-direction:column;align-items:center;gap:2px;font-size:10.5px;color:var(--muted);position:relative;padding:2px 0}
+  .tabbar a.on{color:var(--ink);font-weight:600}
+  .tabbar svg{width:22px;height:22px}
+  .tabbar b{position:absolute;top:-2px;left:calc(50% + 4px);background:var(--hot);color:#fff;font-size:10px;min-width:16px;height:16px;border-radius:8px;display:grid;place-items:center;padding:0 4px}
+  .tabbar b[data-n="0"]{display:none}
+  body.has-mbuy .tabbar{display:none}
+  .mbuy{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:56;background:var(--card);border-top:1px solid var(--line);padding:10px max(16px,env(safe-area-inset-right,0px)) calc(10px + env(safe-area-inset-bottom,0px)) max(16px,env(safe-area-inset-left,0px));gap:12px;align-items:center;box-shadow:0 -6px 20px rgba(20,24,30,.08)}
+  .mbuy .pr{display:flex;flex-direction:column;line-height:1.15}
+  .mbuy .pr b{font-size:19px;font-weight:800;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .mbuy .pr small{font-size:11.5px;color:var(--bronze)}
+  .mbuy .btn{flex:1;height:46px}
+}
+@media (max-width:360px){.cats{grid-template-columns:repeat(3,minmax(0,1fr))}.wordmark{font-size:13px}}
 </style>
 
 <a class="skip" href="#app">Перейти к содержимому</a>
@@ -444,7 +553,7 @@ form.f{display:flex;flex-direction:column;gap:12px}
     <nav class="icons" aria-label="Личное">
       <a class="ic fav-ic" href="#favorites"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20Z"/></svg><span>Избранное</span><b id="favN" data-n="0">0</b></a>
       <a class="ic" href="#contacts"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2Z"/></svg><span>Звонок</span></a>
-      <a class="ic" href="#cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg><span>Корзина</span><b id="cartN" data-n="0">0</b></a>
+      <a class="ic cart-ic" href="#cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg><span>Корзина</span><b id="cartN" data-n="0">0</b></a>
     </nav>
   </div>
   <div class="wrap"><nav class="quick" id="quick" aria-label="Разделы">
@@ -463,6 +572,15 @@ form.f{display:flex;flex-direction:column;gap:12px}
 <div class="scrim" id="scrim" hidden></div>
 
 <main id="app"></main>
+<nav class="tabbar" id="tabbar" aria-label="Навигация">
+  <a href="#home" data-tb="home"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 11 12 4l8 7v9H4z"/><path d="M10 20v-5h4v5"/></svg>Главная</a>
+  <a href="#tech" data-tb="tech" data-tf="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Каталог</a>
+  <a href="#parts" data-tb="parts" data-pb="all"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/></svg>Запчасти</a>
+  <a href="#favorites" data-tb="favorites"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.3a4.3 4.3 0 0 1 7.5 2.5C19.5 15.4 12 20 12 20Z"/></svg>Избранное<b id="favN2" data-n="0">0</b></a>
+  <a href="#cart" data-tb="cart"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.8a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.3"/><circle cx="17" cy="20" r="1.3"/></svg>Корзина<b id="cartN2" data-n="0">0</b></a>
+</nav>
+<div class="mbuy" id="mbuy" hidden></div>
+
 
 <footer class="ftr">
   <div class="wrap">
@@ -500,7 +618,7 @@ const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k) || 'nul
 const store = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)); } catch(e) {} };
 let cart = load('amtrac-cart', {}), favs = load('amtrac-fav', {});
 function counters(){ const n = Object.values(cart).reduce((a,b)=>a+b,0), f = Object.keys(favs).length;
-  $('#cartN').textContent = n; $('#cartN').dataset.n = n; $('#favN').textContent = f; $('#favN').dataset.n = f; }
+  ['#cartN','#cartN2'].forEach(k=>{ $(k).textContent = n; $(k).dataset.n = n; }); ['#favN','#favN2'].forEach(k=>{ $(k).textContent = f; $(k).dataset.n = f; }); }
 function toast(t){ const el=$('#toast'); el.innerHTML=t; el.classList.add('show'); clearTimeout(el._t); el._t=setTimeout(()=>el.classList.remove('show'),2400); }
 
 const ST = {ok:['b-ok','В наличии'], wait:['b-wait','2–4 недели'], order:['b-order','Под заказ']};
@@ -613,7 +731,7 @@ function vHome(){
     <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 7h16M4 12h10M4 17h7"/><circle cx="18" cy="16" r="3"/></svg><span><b>${fmt(DATA.parts.length)} запчастей</b><span>У каждой номер и цена</span></span></div>
   </section>
 
-  <section class="sec"><div class="sec-h"><h2>Хиты продаж</h2><a href="#tech" data-tf="all">Вся техника ›</a></div><div class="hscroll">${hits.map(card).join('')}</div></section>
+  <section class="sec"><div class="sec-h"><h2>Хиты продаж</h2><span class="sec-r"><a href="#tech" data-tf="all">Вся техника ›</a><span class="sx"><button type="button" data-sx="-1" aria-label="Прокрутить назад">‹</button><button type="button" data-sx="1" aria-label="Прокрутить вперёд">›</button></span></span></div><div class="hscroll">${hits.map(card).join('')}</div></section>
 
   <section class="sec split">
     <div class="lease-ban"><span class="badge b-lease" style="align-self:flex-start">Лизинг</span><h3>Технику можно взять в лизинг с авансом от 10%</h3><p>Платёж видно в карточке машины. Оформляем через банки-партнёры, срок до 60 месяцев.</p>
@@ -627,8 +745,8 @@ function vHome(){
     </div>
   </section>
 
-  <section class="sec"><div class="sec-h"><h2>Запчасти Volvo ABG</h2><a href="#parts" data-pb="volvo-abg">Все ${cnt('volvo-abg')} ›</a></div><div class="hscroll">${vparts.map(card).join('')}</div></section>
-  <section class="sec"><div class="sec-h"><h2>Запчасти Vögele</h2><a href="#parts" data-pb="vogele">Все ${cnt('vogele')} ›</a></div><div class="hscroll">${gparts.map(card).join('')}</div></section>
+  <section class="sec"><div class="sec-h"><h2>Запчасти Volvo ABG</h2><span class="sec-r"><a href="#parts" data-pb="volvo-abg">Все ${cnt('volvo-abg')} ›</a><span class="sx"><button type="button" data-sx="-1" aria-label="Прокрутить назад">‹</button><button type="button" data-sx="1" aria-label="Прокрутить вперёд">›</button></span></span></div><div class="hscroll">${vparts.map(card).join('')}</div></section>
+  <section class="sec"><div class="sec-h"><h2>Запчасти Vögele</h2><span class="sec-r"><a href="#parts" data-pb="vogele">Все ${cnt('vogele')} ›</a><span class="sx"><button type="button" data-sx="-1" aria-label="Прокрутить назад">‹</button><button type="button" data-sx="1" aria-label="Прокрутить вперёд">›</button></span></span></div><div class="hscroll">${gparts.map(card).join('')}</div></section>
 
   <section class="sec"><div class="sec-h"><h2>Бренды</h2></div><div class="brands">
     <a href="#parts" data-pb="volvo-abg"><b>VOLVO ABG</b><span>${cnt('volvo-abg')} позиций</span></a>
@@ -739,6 +857,7 @@ function vProduct(p){
   const kit = [['Фильтр масляный двигателя','каждые 250 м/ч'],['Фильтр топливный','каждые 250 м/ч'],['Фильтр гидравлический возвратный','каждые 500 м/ч'],['Масло гидравлическое HVLP 46, 20 л','каждые 1000 м/ч'],['Зубья ковша, комплект','по износу']];
   return `<div class="wrap">
     <nav class="crumbs"><a href="#home">Главная</a><span>›</span>${crumbs}</nav>
+    <div class="m-title"><div class="h1">${esc(m ? p.title : p.fullTitle)}</div><div class="codes info-codes">${badge(p.st)}${p.sku?`<span>${m?'Модель':'Номер'}</span><span class="mono">${esc(p.sku)}</span>`:''}</div></div>
     <div class="prod">
       <div class="gal ${gal.length>1?'':'single'}">
         ${gal.length>1?`<div class="tl">${gal.map((k,i)=>`<button class="${i===0?'on':''}" data-g="${k}" aria-label="Фото ${i+1}"><img src="${IMG[k]}" alt=""></button>`).join('')}</div>`:''}
@@ -770,7 +889,7 @@ function vProduct(p){
       ${tab==='to' ? `<p style="color:var(--muted);margin-bottom:6px">Комплект подбираем по серийному номеру машины. Добавьте его в корзину, менеджер уточнит позиции.</p>${kit.map(([n,t])=>`<div class="kit-row"><span>${n}</span><span class="badge b-order">${t}</span><span class="mono" style="color:var(--muted)">по VIN</span></div>`).join('')}<div style="margin-top:14px"><button class="btn btn-act" data-kit>Добавить комплект ТО</button></div>` : ''}
       ${tab==='desc' ? `<div class="prose">${m ? (desc.map(s => s.length<70 && !/[.!]$/.test(s) ? `<h3>${esc(s)}</h3>` : `<p>${esc(s)}</p>`).join('') || '<p>Описание появится после наполнения каталога.</p>') : `<p>${esc(p.fullTitle)}. Новая деталь для асфальтоукладчиков ${esc(BRAND[p.cat])}, применяемость: ${esc(p.fit)}.</p><p>Перед заказом сверьте номер на старой детали или пришлите фото шильдика машины. Менеджер подтвердит совместимость до оплаты.</p>`}</div>` : ''}
     </div>
-    ${related.length ? `<section class="sec"><div class="sec-h"><h2>${m?'Похожие модели':'С этой деталью покупают'}</h2></div><div class="hscroll">${related.map(card).join('')}</div></section>` : ''}
+    ${related.length ? `<section class="sec"><div class="sec-h"><h2>${m?'Похожие модели':'С этой деталью покупают'}</h2><span class="sec-r"><span class="sx"><button type="button" data-sx="-1" aria-label="Прокрутить назад">‹</button><button type="button" data-sx="1" aria-label="Прокрутить вперёд">›</button></span></span></div><div class="hscroll">${related.map(card).join('')}</div></section>` : ''}
   </div>`;
 }
 
@@ -860,6 +979,12 @@ function render(keep){
   const V = {tech:vTech, parts:vParts, abz:vAbz, conditions:vConditions, about:vAbout, contacts:vContacts, cart:vCart, favorites:vFav};
   app.innerHTML = V[r] ? V[r]() : byId[r] ? vProduct(byId[r]) : vHome();
   $$('#quick a').forEach(a => a.classList.toggle('on', a.dataset.qR===r && ((r==='tech' && a.dataset.tf===techF) || (r==='parts' && a.dataset.pb===pBrand) || r==='abz')));
+  $$('#tabbar a').forEach(a => a.classList.toggle('on', a.dataset.tb===r || (a.dataset.tb==='tech' && isM(byId[r])) || (a.dataset.tb==='parts' && r.startsWith('p-'))));
+  const mb = $('#mbuy'), pr = byId[r];
+  if (pr && pr.cat!=='abz') { const m = isM(pr), inC = cart[pr.id];
+    mb.innerHTML = `<span class="pr"><b>${fmt(pr.price)} BYN</b>${m?`<small>лизинг от ${fmt(lease(pr.price))}/мес</small>`:'<small>'+ST[pr.st][1]+'</small>'}</span><button class="btn ${inC?'btn-line':'btn-act'}" data-add="${pr.id}">${inC?`В корзине · ${inC}`:(m?'Купить':'В корзину')}</button>`;
+    mb.hidden = false; document.body.classList.add('has-mbuy');
+  } else { mb.hidden = true; mb.innerHTML=''; document.body.classList.remove('has-mbuy'); }
   if (keep) scrollTo(0, y);
   bind(); counters();
   if (r==='home') bindSlider();
@@ -876,6 +1001,10 @@ document.addEventListener('click', e => {
 }, true);
 
 function bind(){
+  $$('.hscroll').forEach(h => { const sec = h.closest('.sec'); const bs = $$('[data-sx]', sec);
+    const upd = () => { bs[0].disabled = h.scrollLeft < 4; bs[1].disabled = h.scrollLeft + h.clientWidth > h.scrollWidth - 4; };
+    bs.forEach(b => b.onclick = () => h.scrollBy({left: +b.dataset.sx * h.clientWidth * 0.8, behavior: 'smooth'}));
+    h.addEventListener('scroll', upd, {passive:true}); upd(); });
   $$('[data-add]').forEach(b => b.onclick = e => { e.preventDefault(); const id=b.dataset.add; cart[id]=(cart[id]||0)+1; store('amtrac-cart',cart); toast(`Товар в корзине <a href="#cart" style="text-decoration:underline">Перейти</a>`); render(true); });
   $$('[data-fav]').forEach(b => b.onclick = e => { e.preventDefault(); const id=b.dataset.fav; if (favs[id]) delete favs[id]; else favs[id]=1; store('amtrac-fav',favs); toast(favs[id]?'Сохранено в избранном':'Убрано из избранного'); render(true); });
   $$('input[name="tf"]').forEach(i => i.onchange = () => { techF = i.value; render(true); });
