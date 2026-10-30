@@ -1059,16 +1059,6 @@ function vHome(){
   <section class="sec"><div class="cats" lang="ru">${catTiles.map(([h,n,w,im,go,f])=>`<a class="ct" href="#${go}" ${go==='tech'?`data-tf="${f}"`:go==='parts'?`data-pb="${f}"`:''}><span class="th">${pic(im)}</span><b>${h}</b><small>${fmt(n)} ${word(n,w)}</small></a>`).join('')}</div></section>
 
 
-  <section class="sec"><div class="sec-h"><h2>Подбор запчастей по машине</h2><a href="#parts" data-pb="all">Весь каталог ›</a></div>
-    <div class="mpick">${[['vogele','Vögele'],['volvo-abg','Volvo ABG']].map(([c,h])=>{ const nimg = n => (DATA.parts.find(p=>p.cat===c&&p.node===n&&p.img&&(NODE_HERO[n]||[]).some(k=>p.title.toLowerCase().includes(k)))||DATA.parts.find(p=>p.cat===c&&p.node===n&&p.img)||{}).img;
-      return `<div class="mp">
-      <div class="mp-h"><span><small>Асфальтоукладчики</small><b>${h}</b></span><a href="#parts" data-pb="${c}" class="mp-all">${cnt(c)} позиций ›</a></div>
-      <div class="mp-l">1. Модель</div>
-      <div class="mp-models">${PMODELS[c].map(m=>`<a href="#parts" data-pb="${c}" data-pm="${m}"><b>${m.replace(/^(Super|Titan) /,'')}</b><small>${m.split(' ')[0]} · ${DATA.parts.filter(p=>p.cat===c&&p.models.includes(m)).length} поз.</small></a>`).join('')}</div>
-      <div class="mp-l">2. Или сразу узел</div>
-      <div class="mp-nodes">${['Питатель и конвейер','Шнеки','Плита и трамбовка','Ходовая','Нивелир и датчики'].map(n=>`<a href="#parts" data-pb="${c}" data-pn="${n}"><span class="nph">${pic(nimg(n))}</span><span>${n}</span></a>`).join('')}</div>
-    </div>`; }).join('')}</div>
-  </section>
 
   <section class="sec trust">
     <div><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M3 7h11v9H3zM14 10h4l3 3v3h-7"/><circle cx="7" cy="17.5" r="1.8"/><circle cx="17" cy="17.5" r="1.8"/></svg><span><b>Доставка по РБ</b><span>Технику везём тралом</span></span></div>
