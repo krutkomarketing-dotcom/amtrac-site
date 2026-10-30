@@ -461,15 +461,27 @@ form.f{display:flex;flex-direction:column;gap:12px}
 .node small{font-size:12px;color:var(--muted)}
 .node.on b{color:var(--ink)}
 .mpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.mp{background:var(--card);border-radius:var(--r-l);padding:20px;display:flex;flex-direction:column;gap:12px}
-.mp-h{display:flex;align-items:center;gap:14px}
-.mp-h .im{width:72px;height:72px;border-radius:var(--r-m);background:#fff;overflow:hidden;flex-shrink:0;border:1px solid var(--line)}
-.mp-h .im img{width:100%;height:100%;object-fit:contain}
-.mp-h b{font-size:18px;display:block}
-.mp-h b{color:var(--ink)}
-.mp-h>span:last-child>span{color:var(--muted);font-size:13.5px}
-.mp .pick-row a{display:inline-flex;align-items:center}
-@media (max-width:760px){.mpick{grid-template-columns:1fr}.pick{padding:14px}.nodes{grid-template-columns:repeat(2,minmax(0,1fr))}.pick-row .lbl{width:100%}}
+
+.mp{background:var(--card);border-radius:var(--r-l);padding:20px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.mp-h{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;margin-bottom:4px}
+.mp-h small{display:block;font-size:12.5px;color:var(--muted)}
+.mp-h b{font-size:22px;font-weight:800;letter-spacing:-.02em}
+.mp-all{font-size:14px;font-weight:600;color:var(--bronze);white-space:nowrap}
+.mp-all:hover{color:var(--ink)}
+.mp-l{font-size:12px;font-family:var(--mono);letter-spacing:.06em;text-transform:uppercase;color:var(--muted);margin-top:4px}
+.mp-models{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
+.mp-models a{display:flex;flex-direction:column;gap:2px;padding:10px 12px;border-radius:var(--r-m);background:var(--sunk);border:2px solid transparent;transition:border-color .2s,background .2s,box-shadow .2s}
+.mp-models a:hover{border-color:var(--cta);background:var(--card);box-shadow:0 6px 18px var(--cta-glow)}
+.mp-models b{font-size:17px;font-weight:700;font-variant-numeric:tabular-nums}
+.mp-models small{font-size:12px;color:var(--muted)}
+.mp-nodes{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.mp-nodes a{display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;padding:8px 6px 10px;border-radius:var(--r-m);border:1px solid var(--line);font-size:12.5px;font-weight:500;line-height:1.2;transition:border-color .2s,box-shadow .2s}
+.mp-nodes a:hover{border-color:var(--cta);box-shadow:0 6px 18px var(--cta-glow)}
+.mp-nodes .nph{width:100%;aspect-ratio:1/1;max-width:72px;border-radius:var(--r-s);background:#fff;overflow:hidden}
+.mp-nodes .nph img{width:100%;height:100%;object-fit:contain;padding:3px}
+@media (max-width:1100px) and (min-width:761px){.mpick{grid-template-columns:1fr}}
+@media (max-width:760px){.mp{padding:16px}.mp-models{grid-template-columns:repeat(2,minmax(0,1fr))}.mp-nodes{grid-template-columns:repeat(5,minmax(64px,1fr));overflow-x:auto;scrollbar-width:none;margin-right:-16px;padding-right:16px}.mp-nodes::-webkit-scrollbar{display:none}.mp-nodes a{font-size:11.5px;padding:6px 4px 8px}.mp-h b{font-size:20px}}
+@media (max-width:760px){.mpick{grid-template-columns:1fr}}
 /* ---------- сравнение ---------- */
 .cmpb{position:absolute;right:12px;top:50px;width:34px;height:34px;display:grid;place-items:center;border-radius:var(--r-s);z-index:2;color:var(--muted-2);background:color-mix(in srgb,var(--card) 70%,transparent)}
 .cmpb:hover{color:var(--ink)}
@@ -691,6 +703,68 @@ body.pop-open{overflow:hidden}
   .mbuy .pr small{font-size:11.5px;color:var(--bronze)}
   .mbuy .btn{flex:1;height:46px}
 }
+
+/* ---------- mobile polish v2 ---------- */
+@media (max-width:760px){
+  .util .city{display:none}
+  .util .wrap{gap:10px;justify-content:space-between}
+  .util .mono{order:-1;font-size:12.5px}
+  .cur{font-size:12px;padding:1px 4px}
+  /* слайдер: картинка не налезает на текст */
+  .slide .pic{width:38%;height:34%;top:14px;right:8px}
+  .slide h2{max-width:12.5ch;font-size:21px}
+  .slider{height:350px}
+  /* узлы в подборе: лента с фото */
+  .pick .nodes{display:flex;overflow-x:auto;scrollbar-width:none;gap:6px;margin-right:-14px;padding-right:14px;padding-bottom:2px}
+  .pick .nodes::-webkit-scrollbar{display:none}
+  .pick .node{flex:0 0 auto;flex-direction:column;align-items:center;text-align:center;width:92px;padding:8px 6px;gap:6px}
+  .pick .node .nph{width:56px;height:56px}
+  .pick .node b{font-size:12px}
+  .pick .node small{font-size:11px}
+  .pick-h span{display:none}
+  .pick .pick-row{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;margin-right:-14px;padding-right:14px}
+  .pick .pick-row::-webkit-scrollbar{display:none}
+  .pick .pick-row .lbl{width:auto;margin-right:4px}
+  .pick .chipb{flex-shrink:0}
+  /* сравнение и whatsapp не мешают друг другу */
+  .cmpbar{left:12px;right:12px;transform:none;justify-content:space-between;bottom:calc(70px + env(safe-area-inset-bottom,0px))}
+  body.has-cmp .wa{bottom:calc(136px + env(safe-area-inset-bottom,0px))}
+  body.has-mbuy .wa{bottom:calc(84px + env(safe-area-inset-bottom,0px))}
+  body.has-mbuy.has-cmp .wa{bottom:calc(150px + env(safe-area-inset-bottom,0px))}
+  body.has-mbuy .cmpbar{bottom:calc(80px + env(safe-area-inset-bottom,0px))}
+  .toast{bottom:calc(80px + env(safe-area-inset-bottom,0px));white-space:normal;width:calc(100% - 32px);justify-content:center;text-align:center}
+  /* заказы в кабинете */
+  .ord{padding:14px}
+  .ord-a{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+  .ord-a .btn{padding:0 6px;font-size:13px;height:38px}
+  .ord-h .grow{display:none}
+  .ord-h b.num{margin-left:auto}
+  .oi{max-width:100%;width:100%}
+  /* сравнение */
+  .cmpt th{width:104px;min-width:104px;font-size:12.5px;padding:8px 10px}
+  .cmpt td{min-width:150px;padding:8px 10px;font-size:13px}
+  .cmpt .ph{width:110px;height:84px}
+  .cmpt table{min-width:0}
+  /* формы и панели */
+  .panel{padding:18px 16px}
+  .ipage{gap:12px}
+  .lead-box,.kp{padding:18px 14px}
+  .kp-h{flex-direction:column}
+  .kp-h>div:last-child{text-align:left!important}
+  /* футер компактный */
+  .ftr{margin-top:28px}
+  .ftr .wrap{grid-template-columns:1fr 1fr;gap:18px;padding-block:24px 18px}
+  .ftr .wrap>div:first-child{grid-column:1/-1}
+  .ftr .wrap>div:nth-child(4){grid-column:1/-1}
+  .ftr ul{gap:5px;font-size:13.5px}
+  .ftr .legal{flex-direction:column;gap:4px}
+  /* карточка товара */
+  .kv>div{font-size:13.5px}
+  .buybox .row2{grid-template-columns:1fr 46px}
+  .info .fits span{font-size:12.5px}
+  .crumbs{padding-top:12px;font-size:12px}
+}
+
 @media (max-width:360px){.cats{grid-template-columns:repeat(3,minmax(0,1fr))}.wordmark{font-size:13px}}
 </style>
 
@@ -907,11 +981,14 @@ function vHome(){
 
 
   <section class="sec"><div class="sec-h"><h2>Подбор запчастей по машине</h2><a href="#parts" data-pb="all">Весь каталог ›</a></div>
-    <div class="mpick">${[['vogele','Асфальтоукладчики Vögele','p-cep-pitatelja-vogele'],['volvo-abg','Асфальтоукладчики Volvo ABG','p-cep-transportera-volvo-abg']].map(([c,h,ex])=>`<div class="mp">
-      <div class="mp-h"><span class="im">${pic((byId[ex]||DATA.parts.find(p=>p.cat===c&&p.img)).img)}</span><span><b>${h}</b><span>${cnt(c)} позиций · выберите модель</span></span></div>
-      <div class="pick-row">${PMODELS[c].map(m=>`<a class="chipb" href="#parts" data-pb="${c}" data-pm="${m}">${m} <small>${DATA.parts.filter(p=>p.cat===c&&p.models.includes(m)).length}</small></a>`).join('')}<a class="chipb" href="#parts" data-pb="${c}">Все модели</a></div>
-      <div class="pick-row">${['Питатель и конвейер','Шнеки','Плита и трамбовка','Ходовая','Нивелир и датчики'].map(n=>`<a class="chipb" href="#parts" data-pb="${c}" data-pn="${n}">${n}</a>`).join('')}</div>
-    </div>`).join('')}</div>
+    <div class="mpick">${[['vogele','Vögele'],['volvo-abg','Volvo ABG']].map(([c,h])=>{ const nimg = n => (DATA.parts.find(p=>p.cat===c&&p.node===n&&p.img&&(NODE_HERO[n]||[]).some(k=>p.title.toLowerCase().includes(k)))||DATA.parts.find(p=>p.cat===c&&p.node===n&&p.img)||{}).img;
+      return `<div class="mp">
+      <div class="mp-h"><span><small>Асфальтоукладчики</small><b>${h}</b></span><a href="#parts" data-pb="${c}" class="mp-all">${cnt(c)} позиций ›</a></div>
+      <div class="mp-l">1. Модель</div>
+      <div class="mp-models">${PMODELS[c].map(m=>`<a href="#parts" data-pb="${c}" data-pm="${m}"><b>${m.replace(/^(Super|Titan) /,'')}</b><small>${m.split(' ')[0]} · ${DATA.parts.filter(p=>p.cat===c&&p.models.includes(m)).length} поз.</small></a>`).join('')}</div>
+      <div class="mp-l">2. Или сразу узел</div>
+      <div class="mp-nodes">${['Питатель и конвейер','Шнеки','Плита и трамбовка','Ходовая','Нивелир и датчики'].map(n=>`<a href="#parts" data-pb="${c}" data-pn="${n}"><span class="nph">${pic(nimg(n))}</span><span>${n}</span></a>`).join('')}</div>
+    </div>`; }).join('')}</div>
   </section>
 
   <section class="sec trust">
@@ -1502,6 +1579,7 @@ function render(keep){
     mb.hidden = false; document.body.classList.add('has-mbuy');
   } else { mb.hidden = true; mb.innerHTML=''; document.body.classList.remove('has-mbuy'); }
   const cn = Object.keys(cmp).length, cb = $('#cmpbar');
+  document.body.classList.toggle('has-cmp', !!(cn && r!=='compare'));
   if (cn && r!=='compare') { cb.innerHTML = `<span>В сравнении: <b>${cn}</b></span><a class="btn btn-act" href="#compare">Сравнить</a><button class="x" data-cmp-clear aria-label="Очистить сравнение">×</button>`; cb.hidden = false; } else cb.hidden = true;
   if (keep) scrollTo(0, y);
   bind(); counters();
