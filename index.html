@@ -977,14 +977,14 @@ body.pop-open{overflow:hidden}
     </nav>
   </div>
   <div class="wrap"><nav class="quick" id="quick" aria-label="Разделы">
+    <a href="#parts" data-q-r="parts" data-pb="amtrac">Запчасти AMTRAC</a>
+    <a href="#parts" data-q-r="parts" data-pb="volvo-abg">Запчасти Volvo ABG</a>
+    <a href="#parts" data-q-r="parts" data-pb="vogele">Запчасти Vögele</a>
+    <a href="#parts" data-q-r="parts" data-pb="moba">Датчики MOBA</a>
     <a href="#tech" data-q-r="tech" data-tf="mini">Мини-экскаваторы</a>
     <a href="#tech" data-q-r="tech" data-tf="big">Экскаваторы NDI</a>
     <a href="#tech" data-q-r="tech" data-tf="roller">Катки</a>
     <a href="#tech" data-q-r="tech" data-tf="loader">Погрузчики</a>
-    <a href="#parts" data-q-r="parts" data-pb="volvo-abg">Запчасти Volvo ABG</a>
-    <a href="#parts" data-q-r="parts" data-pb="vogele">Запчасти Vögele</a>
-    <a href="#parts" data-q-r="parts" data-pb="moba">Датчики MOBA</a>
-    <a href="#parts" data-q-r="parts" data-pb="amtrac">Запчасти AMTRAC</a>
     <a href="#abz" data-q-r="abz">АБЗ</a>
     <a href="#conditions" class="sale">Лизинг от 10%</a>
   </nav></div>
@@ -1100,7 +1100,7 @@ function card(p){
 // ---------- mega menu ----------
 const MEGA = [
   ['tech','Техника', DATA.machines.length, () => ['mini','big','roller','loader','other'].map(k => { const l = DATA.machines.filter(x=>x.sub===k || (k==='big' && x.sub==='small')); return l.length ? {h:SUB[k], n:`${l.length} ${plural(l.length,'модель','модели','моделей')}`, img:l[0].img, go:'tech', tf:k} : null; }).filter(Boolean)],
-  ['parts','Запчасти', DATA.parts.filter(p=>p.cat!=='abz').length, () => ['volvo-abg','vogele','moba','amtrac'].map(c => { const l = DATA.parts.filter(x=>x.cat===c); return {h:(c==='moba'?'Датчики ':'Запчасти ')+BRAND[c], n:`${l.length} позиций`, img:(l.find(x=>x.img)||{}).img, go:'parts', pb:c}; })],
+  ['parts','Запчасти', DATA.parts.filter(p=>p.cat!=='abz').length, () => ['amtrac','volvo-abg','vogele','moba'].map(c => { const l = DATA.parts.filter(x=>x.cat===c); return {h:(c==='moba'?'Датчики ':'Запчасти ')+BRAND[c], n:`${l.length} позиций`, img:(l.find(x=>x.img)||{}).img, go:'parts', pb:c}; })],
   ['abz','Оборудование АБЗ', DATA.parts.filter(p=>p.cat==='abz').length, () => DATA.parts.filter(x=>x.cat==='abz').slice(0,9).map(p => ({h:p.title, n:'', img:p.img, go:p.id}))],
 ];
 let megaTab = 'tech';
