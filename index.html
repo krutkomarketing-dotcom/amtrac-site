@@ -838,7 +838,7 @@ body.pop-open{overflow:hidden}
 <a class="skip" href="#app">Перейти к содержимому</a>
 <div class="util"><div class="wrap">
   <span class="city"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Минск и вся Беларусь</span>
-  <a href="#bulk">Заказ по списку</a><a href="#track">Где мой заказ</a><a href="#service">Запись на сервис</a><a href="#conditions">Доставка и лизинг</a><a href="#about">О компании</a>
+  <a href="#bulk">Заказ по списку</a><a href="#service">Запись на сервис</a><a href="#conditions">Доставка и лизинг</a><a href="#about">О компании</a>
   <span class="demo sp">Макет: цены и наличие для примера</span>
   <select id="curSel" class="cur" aria-label="Валюта цен"><option value="BYN">BYN</option><option value="USD">USD</option><option value="RUB">RUB</option></select>
   <span class="mono" style="color:var(--ink)">+375 44 777-23-60</span>
@@ -1439,9 +1439,9 @@ function vAccount(){
   const tabs = [['orders','Заказы'],['fleet','Мой парк техники'],['docs','Документы'],['service','Сервис'],['favs','Избранное'],['profile','Профиль']];
   let body = '';
   if (accTab==='orders') body = allOrders().map(o=>`<div class="ord">
-      <div class="ord-h"><b>Заказ ${o.no}</b><span>${ruDate(o.date)}</span>${o.demo?'<span class="badge b-order">демо</span>':''}<span class="badge ${o.step>=3?'b-ok':'b-wait'}">${STEPS[o.step]}</span><span class="grow"></span><b class="num">${money(orderSum(o))}</b></div>
+      <div class="ord-h"><b>Заказ ${o.no}</b><span>${ruDate(o.date)}</span>${o.demo?'<span class="badge b-order">демо</span>':''}<span class="grow"></span><b class="num">${money(orderSum(o))}</b></div>
       <div class="ord-items">${o.items.filter(([id])=>byId[id]).map(([id,n])=>`<a href="#${id}" class="oi"><span class="th">${pic(byId[id].img)}</span><span>${esc(byId[id].title)}<br><small>${n} шт. · ${money(byId[id].price*n)}</small></span></a>`).join('')}</div>
-      <div class="ord-a"><button class="btn btn-act btn-sm" data-repeat="${o.no}">Повторить заказ</button><a class="btn btn-line btn-sm" href="#track" data-track="${o.no}">Где заказ</a><a class="btn btn-line btn-sm" href="#kp" data-kp="${o.no}">Счёт PDF</a></div>
+      <div class="ord-a"><button class="btn btn-act btn-sm" data-repeat="${o.no}">Повторить заказ</button><a class="btn btn-line btn-sm" href="#kp" data-kp="${o.no}">Счёт PDF</a></div>
     </div>`).join('');
   if (accTab==='fleet') body = `<p style="color:var(--muted);margin-bottom:12px">Добавьте свои машины. Сайт напомнит о ТО по моточасам и покажет запчасти, которые к ним подходят.</p>
     <div class="fleet">${garage.map((g,i)=>{ const f = fleetBy[g.key]; if(!f) return ''; const t = nextTO(g.hours); const mm = f.kind==='machine'?byId[f.id]:null;
@@ -1496,16 +1496,6 @@ function vBulk(){
 }
 
 // ---------- отслеживание ----------
-let trackNo = '';
-function vTrack(){
-  const o = trackNo && allOrders().find(x=>x.no.toLowerCase()===trackNo.trim().toLowerCase());
-  return `<div class="wrap"><nav class="crumbs"><a href="#home">Главная</a><span>›</span><span>Где мой заказ</span></nav>
-    <div class="page-h"><h1>Где мой заказ</h1></div>
-    <div class="ipage"><div class="panel"><form class="f" id="trackF"><label>Номер заказа<input id="tr-no" value="${esc(trackNo)}" placeholder="например AG-24168" required></label><button class="btn btn-act" type="submit">Проверить</button></form>
-      <p style="color:var(--muted);font-size:13.5px;margin-top:10px">Попробуйте демо-номера: AG-24117, AG-24168, AG-24203.</p></div>
-    <div class="panel">${!trackNo ? '<h2>Статус появится здесь</h2><p style="color:var(--muted)">В рабочей версии статусы приходят из 1С, а клиент получает уведомления в Telegram или SMS.</p>' : !o ? `<h2>Заказ ${esc(trackNo)} не найден</h2><p style="color:var(--muted)">Проверьте номер или позвоните менеджеру.</p>` :
-      `<h2>Заказ ${o.no}</h2><p style="color:var(--muted)">от ${ruDate(o.date)} · ${money(orderSum(o))}</p><ol class="tl">${STEPS.map((s,i)=>`<li class="${i<=o.step?'done':''} ${i===o.step?'cur':''}"><b>${s}</b><small>${i<=o.step?ruDate(new Date(new Date(o.date).getTime()+i*86400000*1.5)):'ожидается'}</small></li>`).join('')}</ol>`}</div></div></div>`;
-}
 
 // ---------- сервис ----------
 let svcDone = null;
@@ -1559,7 +1549,7 @@ function homeServices(){
   const it = [['#bulk','Заказ по списку','Вставьте номера из сметы, корзина соберётся сама','<path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01"/>'],
     ['#account','Мой парк техники','Напомним о ТО и покажем запчасти под ваши машины','<path d="M3 17h13l3-5h2v5h-2"/><circle cx="7" cy="18" r="2"/><circle cx="16" cy="18" r="2"/><path d="M5 17V9h7l2 3"/>'],
     ['#service','Запись на сервис','Выезд механика или ТО на базе, удобное время','<path d="M14.5 6.5a4 4 0 0 0-5 5L4 17l3 3 5.5-5.5a4 4 0 0 0 5-5L15 12l-3-3Z"/>'],
-    ['#track','Где мой заказ','Статус по номеру заказа, уведомления в Telegram','<circle cx="12" cy="10" r="3"/><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/>'],
+    ['#conditions','Лизинг от 10%','Аванс от 10%, срок до 5 лет, расчёт платежа в карточке машины','<rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/>'],
     ['#cart','КП и счёт в PDF','Из корзины в один клик, с НДС и сроками','<path d="M7 3h7l5 5v13H7z"/><path d="M14 3v5h5M10 13h6M10 17h6"/>']];
   return `<section class="sec"><div class="sec-h"><h2>Сервисы для бизнеса</h2><a href="#account">Личный кабинет ›</a></div><div class="bsv">${it.map(([h,t,d,ic])=>`<a href="${h}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${ic}</svg><b>${t}</b><span>${d}</span></a>`).join('')}</div></section>`;
 }
@@ -1578,7 +1568,6 @@ function bindFeatures(){
   const pf = $('#profF'); if (pf) pf.onsubmit = e => { e.preventDefault(); Object.assign(acc,{company:$('#pf-company').value, unp:$('#pf-unp').value, name:$('#pf-name').value, phone:$('#pf-phone').value, addr:$('#pf-addr').value}); saveAll(); toast('Профиль сохранён'); render(true); };
   const lo = $('#logout'); if (lo) lo.onclick = () => { acc = null; saveAll(); render(); };
   $$('[data-repeat]').forEach(b => b.onclick = () => { const o = allOrders().find(x=>x.no===b.dataset.repeat); o.items.forEach(([id,n])=>{ if(byId[id]) cart[id]=(cart[id]||0)+n; }); store('amtrac-cart',cart); toast(`Заказ ${o.no} добавлен в корзину <a href="#cart" style="text-decoration:underline">Перейти</a>`); render(true); });
-  $$('[data-track]').forEach(a => a.onclick = () => { trackNo = a.dataset.track; });
   $$('[data-kp]').forEach(a => a.onclick = () => { kpSource = a.dataset.kp; });
   const kc = $('#kpCart'); if (kc) kc.onclick = () => { kpSource = 'cart'; };
   const kpP = $('#kpPrint'); if (kpP) kpP.onclick = () => window.print();
@@ -1586,14 +1575,13 @@ function bindFeatures(){
   const be = $('#bulkEx'); if (be) be.onclick = () => { const ex = DATA.parts.filter(p=>p.sku&&p.img).slice(0,3).map((p,i)=>`${p.sku}; ${[2,1,4][i]}`).join('\n') + '\n99887766; 1'; $('#bulk-t').value = ex; };
   const bfi = $('#bulk-file'); if (bfi) bfi.onchange = () => { const f = bfi.files[0]; if (!f) return; const rd = new FileReader(); rd.onload = () => { bulkText = String(rd.result); bulkRes = parseBulk(bulkText); render(true); }; rd.readAsText(f); };
   const ba = $('#bulkAdd'); if (ba) ba.onclick = () => { bulkRes.filter(x=>x.p).forEach(x=>{ cart[x.p.id]=(cart[x.p.id]||0)+x.qty; }); store('amtrac-cart',cart); toast('Позиции добавлены в корзину'); location.hash = 'cart'; };
-  const tf = $('#trackF'); if (tf) tf.onsubmit = e => { e.preventDefault(); trackNo = $('#tr-no').value; render(true); };
   const sf = $('#svcF'); if (sf) sf.onsubmit = e => { e.preventDefault(); svcDone = {no:'S-'+(1000+services.length+1), machine:$('#sv-m').value, work:$('#sv-w').value, place:$('#sv-p').value, date:$('#sv-d').value, slot:(document.querySelector('input[name="slot"]:checked')||{}).value||'11:00'}; services.unshift(svcDone); saveAll(); render(true); };
   $$('.slot input').forEach(i => i.onchange = () => $$('.slot').forEach(l => l.classList.toggle('on', l.querySelector('input').checked)));
   $$('.slot').forEach(l => l.classList.toggle('on', l.querySelector('input').checked));
   const sr = $('#shipReg'); if (sr) sr.onchange = () => { shipReg = sr.value; render(true); };
   const nb = $('[data-notify]'); if (nb) nb.onclick = () => { $('#notifyBox').hidden = false; nb.hidden = true; $('#nt-ph').focus(); };
   const nf = $('#notifyF'); if (nf) nf.onsubmit = e => { e.preventDefault(); notifyList[route()] = $('#nt-ph').value; saveAll(); nf.innerHTML = '<div class="ok">Сообщим, как только деталь придёт на склад.</div>'; };
-  const ck = $('#checkoutF'); if (ck) ck.onsubmit = e => { e.preventDefault(); const items = Object.entries(cart).filter(([id])=>byId[id]); const o = {no:'AG-'+(24300+myOrders.length+1), date:today(), step:0, items}; myOrders.unshift(o); cart = {}; store('amtrac-cart',cart); if (!acc) acc = {phone:$('#ck-phone').value, company:$('#ck-name').value, unp:'', name:'', addr:''}; saveAll(); trackNo = o.no; toast(`Заказ ${o.no} оформлен`); location.hash = 'track'; };
+  const ck = $('#checkoutF'); if (ck) ck.onsubmit = e => { e.preventDefault(); const items = Object.entries(cart).filter(([id])=>byId[id]); const o = {no:'AG-'+(24300+myOrders.length+1), date:today(), step:0, items}; myOrders.unshift(o); cart = {}; store('amtrac-cart',cart); if (!acc) acc = {phone:$('#ck-phone').value, company:$('#ck-name').value, unp:'', name:'', addr:''}; saveAll(); toast(`Заказ ${o.no} принят. Менеджер позвонит и подтвердит счёт`); location.hash = 'account'; };
 }
 
 
@@ -1655,7 +1643,7 @@ const route = () => (location.hash || '#home').slice(1) || 'home';
 function render(keep){
   const r = route(), y = scrollY;
   clearInterval(slideTimer);
-  const V = {tech:vTech, parts:vParts, abz:vAbz, conditions:vConditions, about:vAbout, contacts:vContacts, cart:vCart, favorites:vFav, compare:vCompare, account:vAccount, bulk:vBulk, track:vTrack, service:vService, kp:vKP};
+  const V = {tech:vTech, parts:vParts, abz:vAbz, conditions:vConditions, about:vAbout, contacts:vContacts, cart:vCart, favorites:vFav, compare:vCompare, account:vAccount, bulk:vBulk, service:vService, kp:vKP};
   app.innerHTML = V[r] ? V[r]() : byId[r] ? vProduct(byId[r]) : vHome();
   $$('#quick a').forEach(a => a.classList.toggle('on', a.dataset.qR===r && ((r==='tech' && a.dataset.tf===techF) || (r==='parts' && a.dataset.pb===pBrand) || r==='abz')));
   $$('#tabbar a').forEach(a => a.classList.toggle('on', a.dataset.tb===r || (a.dataset.tb==='tech' && isM(byId[r])) || (a.dataset.tb==='parts' && r.startsWith('p-'))));
@@ -1725,6 +1713,5 @@ function bind(){
 tab = isM(byId[route()]) ? 'spec' : 'desc';
 render();
 </script>
-
 </body>
 </html>
