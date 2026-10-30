@@ -449,15 +449,17 @@ form.f{display:flex;flex-direction:column;gap:12px}
 .chipb.on{background:var(--act);color:var(--act-fg);border-color:var(--act)}
 .chipb small{color:var(--muted-2);margin-left:4px;font-size:12px}
 .chipb.on small{color:inherit;opacity:.7}
-.nodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px}
-.node{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--r-m);background:var(--sunk);text-align:left;border:1px solid transparent;transition:border-color .2s,background .2s}
+.nodes{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:8px}
+.node{display:flex;align-items:center;gap:10px;padding:8px 10px 8px 8px;border-radius:var(--r-m);background:var(--sunk);text-align:left;border:2px solid transparent;transition:border-color .2s,background .2s,box-shadow .2s}
+.node .nph{width:52px;height:52px;flex-shrink:0;border-radius:var(--r-s);background:#fff;overflow:hidden;display:grid;place-items:center}
+.node .nph img{width:100%;height:100%;object-fit:contain;padding:3px}
+.node .nph svg{width:26px;height:26px;color:var(--ink-2)}
 .node:hover{border-color:var(--cta);background:var(--card)}
-.node.on{background:var(--cta);color:var(--cta-fg)}
-.node svg{width:24px;height:24px;flex-shrink:0;color:var(--bronze)}
-.node.on svg{color:var(--cta-fg)}
+.node.on{background:var(--card);border-color:var(--cta);box-shadow:0 6px 18px var(--cta-glow)}
+
 .node b{display:block;font-size:13.5px;font-weight:600;line-height:1.2}
 .node small{font-size:12px;color:var(--muted)}
-.node.on small{color:inherit;opacity:.75}
+.node.on b{color:var(--ink)}
 .mpick{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
 .mp{background:var(--card);border-radius:var(--r-l);padding:20px;display:flex;flex-direction:column;gap:12px}
 .mp-h{display:flex;align-items:center;gap:14px}
@@ -976,6 +978,7 @@ const NI = {
  'Все':'<rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/>',
  'Крепёж и прочее':'<path d="M9 3h6v4H9zM12 7v14M9 11h6M9 15h6"/>'};
 const nodeI = n => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">${NI[n]||NI['Крепёж и прочее']}</svg>`;
+const NODE_HERO = {'Ходовая':['башмак','гусениц','каток'],'Питатель и конвейер':['цепь'],'Шнеки':['шнек'],'Плита и трамбовка':['трамбов','тэн'],'Нивелир и датчики':['датчик','ультраз'],'Гидравлика':['гидромотор','насос'],'Двигатель и привод':['фильтр','ремень','вал'],'Электрика и пульты':['пульт','дисплей'],'Уплотнения':['уплотн','кольц'],'Крепёж и прочее':['болт']};
 const fitsModel = p => pModel==='all' || !p.models.length || p.models.includes(pModel);
 
 function partsList(){
@@ -990,12 +993,14 @@ function partsList(){
 function pickPanel(){
   const pool = DATA.parts.filter(p => p.cat!=='abz' && (pBrand==='all'||p.cat===pBrand) && fitsModel(p));
   const nc = n => pool.filter(p=>p.node===n).length;
+  const nimg = n => (pool.filter(p=>p.node===n&&p.img).sort((a,b)=>(NODE_HERO[n]||[]).some(k=>b.title.toLowerCase().includes(k)) - (NODE_HERO[n]||[]).some(k=>a.title.toLowerCase().includes(k)))[0]||{}).img;
+  const ntile = (n,label,count,on) => `<button type="button" class="node ${on?'on':''}" data-pick-n="${n}"><span class="nph">${n==='all'?nodeI('Все'):(nimg(n)?pic(nimg(n)):nodeI(n))}</span><span><b>${label}</b><small>${count} поз.</small></span></button>`;
   const models = PMODELS[pBrand];
   return `<div class="pick">
     <div class="pick-h"><b>Подбор по машине</b><span>Выберите марку, модель и узел. Покажем детали, которые к ней подходят.</span></div>
     <div class="pick-row"><span class="lbl">Марка</span>${[['all','Все'],['vogele','Vögele'],['volvo-abg','Volvo ABG'],['moba','MOBA']].map(([k,t])=>`<button type="button" class="chipb ${pBrand===k?'on':''}" data-pick-b="${k}">${t}</button>`).join('')}</div>
     ${models ? `<div class="pick-row"><span class="lbl">Модель</span><button type="button" class="chipb ${pModel==='all'?'on':''}" data-pick-m="all">Все модели</button>${models.map(m=>`<button type="button" class="chipb ${pModel===m?'on':''}" data-pick-m="${m}">${m}</button>`).join('')}</div>` : ''}
-    <div class="nodes"><button type="button" class="node ${pNode==='all'?'on':''}" data-pick-n="all">${nodeI('Все')}<span><b>Все узлы</b><small>${fmt(pool.length)} поз.</small></span></button>${NODES.filter(nc).map(n=>`<button type="button" class="node ${pNode===n?'on':''}" data-pick-n="${n}">${nodeI(n)}<span><b>${n}</b><small>${nc(n)} поз.</small></span></button>`).join('')}</div>
+    <div class="nodes">${ntile('all','Все узлы',fmt(pool.length),pNode==='all')}${NODES.filter(nc).map(n=>ntile(n,n,nc(n),pNode===n)).join('')}</div>
   </div>`;
 }
 function vParts(){
