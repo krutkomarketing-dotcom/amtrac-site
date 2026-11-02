@@ -958,13 +958,6 @@ body.pop-open{overflow:hidden}
 </style>
 
 <a class="skip" href="#app">Перейти к содержимому</a>
-<div class="util"><div class="wrap">
-  <span class="city"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.2-7-11.5A7 7 0 0 1 19 9.5C19 14.8 12 21 12 21Z"/><circle cx="12" cy="9.5" r="2.5"/></svg>Минск и вся Беларусь</span>
-  <a href="#bulk">Заказ по списку</a><a href="#service">Запись на сервис</a><a href="#conditions">Доставка и лизинг</a><a href="#about">О компании</a>
-  <span class="demo sp">Макет: цены и наличие для примера</span>
-  <select id="curSel" class="cur" aria-label="Валюта цен"><option value="BYN">BYN</option><option value="USD">USD</option><option value="RUB">RUB</option></select>
-  <a class="mono" style="color:var(--ink)" href="tel:+375447772360">+375 44 777-23-60</a>
-</div></div>
 <header class="hdr" id="hdr">
   <div class="wrap hdr-main">
     <a class="brand" href="#home" aria-label="Amtrac Group, на главную">
@@ -1532,7 +1525,7 @@ function vCompare(){
 // ================= B2B-функции =================
 // валюта
 const CUR = {BYN:{r:1,s:'BYN'}, USD:{r:0.30,s:'$'}, RUB:{r:26,s:'₽'}};
-let cur = load('amtrac-cur','BYN'); if (!CUR[cur]) cur = 'BYN';
+let cur = 'BYN';
 function money(n){ const c = CUR[cur]; const v = n*c.r; return c.s==='$' ? `$${fmt(v)}` : `${fmt(v)} ${c.s}`; }
 
 // аккаунт, парк техники, заказы
