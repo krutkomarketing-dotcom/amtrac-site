@@ -1146,17 +1146,21 @@ function vHome(){
   const cnt = c => DATA.parts.filter(p=>p.cat===c).length;
   const nm = f => DATA.machines.filter(f).length;
   const cnPic = (DATA.parts.find(p=>p.cat==='amtrac'&&p.img&&/^Звёздочка|^Ролик|^Башмак/.test(p.title))||firstPart('amtrac')||{}).img;
+  const mc = k => DATA.parts.filter(p=>p.mach===k).length;
+  const nc = n => DATA.parts.filter(p=>p.cat!=='abz'&&p.node===n).length;
+  const mPic = (f) => (DATA.parts.find(p=>p.img&&f(p))||{}).img;
+  // [заголовок, кол-во, слово, картинка, раздел, бренд, тип техники, узел]
   const catTiles = [
     ['Запчасти AMTRAC', cnt('amtrac'), 'позиция', cnPic, 'parts', 'amtrac'],
     ['Запчасти Volvo ABG', cnt('volvo-abg'), 'позиция', firstPart('volvo-abg')?.img, 'parts', 'volvo-abg'],
     ['Запчасти Vögele', cnt('vogele'), 'позиция', firstPart('vogele')?.img, 'parts', 'vogele'],
     ['Датчики MOBA', cnt('moba'), 'позиция', firstPart('moba')?.img, 'parts', 'moba'],
     ['Оборудование АБЗ', cnt('abz'), 'агрегат', firstPart('abz')?.img || DATA.abzPics[0], 'abz', ''],
-    ['Мини-экскаваторы', nm(x=>x.sub==='mini'), 'модель', r319?.img, 'tech', 'mini'],
-    ['Экскаваторы NDI', nm(x=>x.sub==='big'||x.sub==='small'), 'модель', ndi?.img, 'tech', 'big'],
-    ['Катки', nm(x=>x.sub==='roller'), 'модель', lp?.img, 'tech', 'roller'],
-    ['Погрузчики', nm(x=>x.sub==='loader'), 'модель', M('r906-mini-pogruzchik')?.img, 'tech', 'loader'],
-    ['Лизинг от 10%', 60, 'мес', IMG['lease-bg']?'lease-bg':null, 'conditions', '']
+    ['Для укладчиков', mc('paver'), 'позиция', mPic(p=>p.cat==='amtrac'&&p.mach==='paver'&&/^Пульт/.test(p.title)), 'parts', 'all', 'paver'],
+    ['Для дорожных фрез', mc('milling'), 'позиция', mPic(p=>p.mach==='milling'&&/^Лента|^Ролик|^Резец/.test(p.title)), 'parts', 'all', 'milling'],
+    ['Для катков', mc('roller'), 'позиция', mPic(p=>p.mach==='roller'), 'parts', 'all', 'roller'],
+    ['Ходовая и гусеницы', nc('Ходовая'), 'позиция', mPic(p=>p.node==='Ходовая'&&/^Башмак/.test(p.title)), 'parts', 'all', '', 'Ходовая'],
+    ['Нивелир и датчики', nc('Нивелир и датчики'), 'позиция', mPic(p=>p.cat==='amtrac'&&/^Ультразвуковой/.test(p.title)), 'parts', 'all', '', 'Нивелир и датчики']
   ];
   const word = (n, w) => w==='мес' ? 'месяцев срок' : w==='модель' ? plural(n,'модель','модели','моделей') : w==='позиция' ? plural(n,'позиция','позиции','позиций') : plural(n,'агрегат','агрегата','агрегатов');
   return `<div class="wrap">
@@ -1183,7 +1187,7 @@ function vHome(){
     </div>
   </section>
 
-  <section class="sec"><div class="cats" lang="ru">${catTiles.map(([h,n,w,im,go,f])=>`<a class="ct" href="#${go}" ${go==='tech'?`data-tf="${f}"`:go==='parts'?`data-pb="${f}"`:''}><span class="th">${pic(im)}</span><span class="ct-t"><b>${h}</b><small>${w==='мес'?'аванс, до 60 месяцев':fmt(n)+' '+word(n,w)}</small></span></a>`).join('')}</div></section>
+  <section class="sec"><div class="cats" lang="ru">${catTiles.map(([h,n,w,im,go,f,mch,nd])=>`<a class="ct" href="#${go}" ${go==='tech'?`data-tf="${f}"`:go==='parts'?`data-pb="${f}"`:''} ${mch?`data-pmach="${mch}"`:''} ${nd?`data-pn="${nd}"`:''}><span class="th">${pic(im)}</span><span class="ct-t"><b>${h}</b><small>${w==='мес'?'аванс, до 60 месяцев':fmt(n)+' '+word(n,w)}</small></span></a>`).join('')}</div></section>
 
 
 
@@ -1779,7 +1783,7 @@ addEventListener('hashchange', () => { fOpen = false; megaOpen(false); tab = isM
 document.addEventListener('click', e => {
   const a = e.target.closest('a[data-tf],a[data-pb]'); if (!a) return;
   if (a.dataset.tf !== undefined) { techF = a.dataset.tf || 'all'; techStock = false; techMax = ''; }
-  if (a.dataset.pb !== undefined) { pMach = 'all'; pBrand = a.dataset.pb || 'all'; pQ = ''; pShow = 40; pStock = 'all'; pPhoto = false; pModel = a.dataset.pm || 'all'; pNode = a.dataset.pn || 'all'; }
+  if (a.dataset.pb !== undefined) { pMach = a.dataset.pmach || 'all'; pBrand = a.dataset.pb || 'all'; pQ = ''; pShow = 40; pStock = 'all'; pPhoto = false; pModel = a.dataset.pm || 'all'; pNode = a.dataset.pn || 'all'; }
   megaOpen(false);
   if (route() === a.getAttribute('href').slice(1)) { e.preventDefault(); render(); scrollTo(0,0); }
 }, true);
